@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   REGISTER: '/auth/register',
   PROFILE: '/user/profile',
   REFRESH_TOKEN: '/auth/refresh',
+  CONFIG_VERSION_CHECK: '/admin/config-version-check',
 };
 
 // HTTP Methods
