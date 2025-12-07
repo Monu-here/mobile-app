@@ -6,6 +6,8 @@ export const ENDPOINTS = {
   // Login endpoint (user provided: http://mschool.zic.edu.np/api/login)
   LOGIN: '/login',
    AUTH_CHECK: '/auth-check',
+  SUBSCRIBE: '/profile/subscribe',
+  CHANGE_PASSWORD: '/change-password',
   LOGOUT: '/auth/logout',
   REGISTER: '/auth/register',
   PROFILE: '/user/profile',

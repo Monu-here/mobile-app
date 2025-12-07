@@ -195,6 +195,43 @@ class ApiService {
   }
 
   /**
+   * Subscribe FCM token for push notifications
+   * @param {string} fcmToken
+   */
+  async subscribe(fcmToken) {
+    try {
+      if (!fcmToken) throw { message: 'FCM token is required' };
+      const response = await this.post(ENDPOINTS.SUBSCRIBE, { fcm_token: fcmToken });
+      // backend returns res(true, [], ['message']) or similar. Normalize message
+      const message = response?.message || (response?.meta && response.meta.message) || (Array.isArray(response?.errors) ? response.errors[0] : null) || null;
+      return { raw: response, message };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Change user password
+   * @param {string} currentPassword
+   * @param {string} newPassword
+   */
+  async changePassword(currentPassword, newPassword) {
+    try {
+      if (!currentPassword || !newPassword) throw { message: 'Both current and new passwords are required' };
+      const response = await this.post(ENDPOINTS.CHANGE_PASSWORD, {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+
+      // Normalize message
+      const message = response?.message || (response?.meta && response.meta.message) || (Array.isArray(response?.errors) ? response.errors[0] : null) || 'Password changed';
+      return { raw: response, message };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * Refresh token
    */
   async refreshToken() {

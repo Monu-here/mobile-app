@@ -4,9 +4,12 @@ import { ActivityIndicator, View } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
+import { getFcmToken } from './src/utils/storage';
+import { showToast } from './src/components/Toast';
 
 export default function App() {
   const [appState, setAppState] = useState('loading'); // 'loading', 'onboarding', 'login', 'home'
@@ -34,6 +37,18 @@ export default function App() {
             const res = await apiService.authCheck();
             const user = res?.user || res?.raw?.data || res?.raw || null;
             setUser(user);
+
+            // If client stored an FCM token earlier, register it with backend
+            try {
+              const fcmToken = await getFcmToken();
+              if (fcmToken) {
+                await apiService.subscribe(fcmToken);
+                showToast('Device subscribed for push notifications', 'success');
+              }
+            } catch (subErr) {
+              console.warn('FCM subscribe error:', subErr);
+            }
+
             setAppState('home');
           } catch (err) {
             // Token invalid or auth-check failed
@@ -70,6 +85,14 @@ export default function App() {
     setAppState('home');
   };
 
+  const handleNavigateProfile = () => {
+    setAppState('profile');
+  };
+
+  const handleProfileBack = () => {
+    setAppState('home');
+  };
+
   const handleLogout = async () => {
     setUser(null);
     apiService.clearToken();
@@ -97,7 +120,8 @@ export default function App() {
       {appState === 'login' && (
         <LoginScreen onLoginSuccess={handleLoginSuccess} onNavigateSignUp={handleNavigateSignUp} />
       )}
-      {appState === 'home' && <HomeScreen user={user} onLogout={handleLogout} />}
+  {appState === 'home' && <HomeScreen user={user} onLogout={handleLogout} onNavigateProfile={handleNavigateProfile} />}
+  {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
       {/* Global Toast container */}
       <Toast />
     </>

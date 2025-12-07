@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
   USER_DATA: '@schoolapp_user_data',
   ONBOARDING_COMPLETED: '@schoolapp_onboarding_completed',
   REMEMBER_ME: '@schoolapp_remember_me',
+  FCM_TOKEN: '@schoolapp_fcm_token',
 };
 
 /**
@@ -131,6 +132,40 @@ export const clearRememberMe = async () => {
     await AsyncStorage.removeItem(STORAGE_KEYS.REMEMBER_ME);
   } catch (error) {
     console.error('Error clearing remember me:', error);
+  }
+};
+
+/**
+ * Store FCM token
+ */
+export const storeFcmToken = async (token) => {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEYS.FCM_TOKEN, token);
+  } catch (error) {
+    console.error('Error storing FCM token:', error);
+  }
+};
+
+/**
+ * Get stored FCM token
+ */
+export const getFcmToken = async () => {
+  try {
+    return await AsyncStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
+  } catch (error) {
+    console.error('Error retrieving FCM token:', error);
+    return null;
+  }
+};
+
+/**
+ * Clear FCM token
+ */
+export const clearFcmToken = async () => {
+  try {
+    await AsyncStorage.removeItem(STORAGE_KEYS.FCM_TOKEN);
+  } catch (error) {
+    console.error('Error clearing FCM token:', error);
   }
 };
 

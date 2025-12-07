@@ -78,7 +78,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile }) {
   const menuItems = [
     { id: '1', title: 'Dashboard', icon: '📊', color: '#6C63FF' },
     { id: '2', title: 'Classes', icon: '📚', color: '#00BFA6' },
@@ -108,6 +108,9 @@ export default function HomeScreen({ user, onLogout }) {
           </View>
           <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
             <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.profileButton} onPress={onNavigateProfile}>
+            <Text style={styles.profileIcon}>👤</Text>
           </TouchableOpacity>
         </View>
 
@@ -302,6 +305,15 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     fontWeight: '400',
+  },
+  profileButton: {
+    marginLeft: 8,
+    backgroundColor: '#EEE',
+    padding: 8,
+    borderRadius: 20,
+  },
+  profileIcon: {
+    fontSize: 18,
   },
   roleBox: {
     backgroundColor: '#FFF',
