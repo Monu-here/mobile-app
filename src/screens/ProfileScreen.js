@@ -21,7 +21,11 @@ export default function ProfileScreen({ user: initialUser, onBack }) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState({});
+  const [lastErrorDebug, setLastErrorDebug] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -65,11 +69,17 @@ function getUserName(u) {
 }
 
   const validatePasswordForm = () => {
+    // Trim values to avoid whitespace mismatch
     const e = {};
-    if (!currentPassword) e.current = 'Current password is required';
-    if (!newPassword) e.new = 'New password is required';
-    if (newPassword && newPassword.length < 6) e.new = 'New password must be at least 6 characters';
-    if (newPassword !== confirmPassword) e.confirm = 'Passwords do not match';
+    const cur = (currentPassword || '').trim();
+    const nw = (newPassword || '').trim();
+    const cf = (confirmPassword || '').trim();
+
+    if (!cur) e.current = 'Current password is required';
+    if (!nw) e.new = 'New password is required';
+    if (nw && nw.length < 6) e.new = 'New password must be at least 6 characters';
+    if (nw !== cf) e.confirm = 'Passwords do not match';
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -78,13 +88,45 @@ function getUserName(u) {
     if (!validatePasswordForm()) return;
     setLoading(true);
     try {
-      const res = await apiService.changePassword(currentPassword, newPassword);
+      // Log attempt (do not include passwords)
+      // eslint-disable-next-line no-console
+      console.log('[ProfileScreen] changePassword attempt for user:', user?.user_id ?? user?.id ?? 'unknown');
+
+      const res = await apiService.changePassword(currentPassword.trim(), newPassword.trim());
+
+      // Log success response
+      // eslint-disable-next-line no-console
+      console.log('[ProfileScreen] changePassword success:', res);
+
       showToast(res.message || 'Password changed successfully', 'success');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
+      setLastErrorDebug(null);
     } catch (err) {
-      const message = err?.message || err?.data?.message || 'Failed to change password';
+      // Try to extract validation messages from backend and log full error
+      // eslint-disable-next-line no-console
+      console.error('[ProfileScreen] changePassword error:', err);
+
+      let message = 'Failed to change password';
+      if (err?.data) {
+        if (err.data.errors) {
+          const firstKey = Object.keys(err.data.errors)[0];
+          message = err.data.errors[firstKey][0];
+        } else if (err.data.message) {
+          message = err.data.message;
+        } else if (typeof err.data === 'string') {
+          message = err.data;
+        }
+        // store raw data for debug copy-paste
+        setLastErrorDebug(err.data);
+      } else if (err?.message) {
+        message = err.message;
+        setLastErrorDebug({ message: err.message });
+      } else {
+        setLastErrorDebug(err);
+      }
+
       showToast(message, 'error');
     } finally {
       setLoading(false);
@@ -119,38 +161,59 @@ function getUserName(u) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Change Password</Text>
           <Text style={styles.fieldLabel}>Current Password</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            value={currentPassword}
-            onChangeText={setCurrentPassword}
-            placeholder="Current password"
-          />
+          <View style={styles.inputRow}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              secureTextEntry={!showCurrent}
+              value={currentPassword}
+              onChangeText={setCurrentPassword}
+              placeholder="Current password"
+            />
+            <TouchableOpacity onPress={() => setShowCurrent(!showCurrent)} style={styles.eyeBtn}>
+              <Text style={styles.eyeText}>{showCurrent ? '👁️' : '👁️‍🗨️'}</Text>
+            </TouchableOpacity>
+          </View>
           {errors.current && <Text style={styles.err}>{errors.current}</Text>}
 
           <Text style={styles.fieldLabel}>New Password</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            value={newPassword}
-            onChangeText={setNewPassword}
-            placeholder="New password"
-          />
+          <View style={styles.inputRow}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              secureTextEntry={!showNew}
+              value={newPassword}
+              onChangeText={setNewPassword}
+              placeholder="New password"
+            />
+            <TouchableOpacity onPress={() => setShowNew(!showNew)} style={styles.eyeBtn}>
+              <Text style={styles.eyeText}>{showNew ? '👁️' : '👁️‍🗨️'}</Text>
+            </TouchableOpacity>
+          </View>
           {errors.new && <Text style={styles.err}>{errors.new}</Text>}
 
           <Text style={styles.fieldLabel}>Confirm New Password</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Confirm new password"
-          />
+          <View style={styles.inputRow}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              secureTextEntry={!showConfirm}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Confirm new password"
+            />
+            <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)} style={styles.eyeBtn}>
+              <Text style={styles.eyeText}>{showConfirm ? '👁️' : '👁️‍🗨️'}</Text>
+            </TouchableOpacity>
+          </View>
           {errors.confirm && <Text style={styles.err}>{errors.confirm}</Text>}
 
           <TouchableOpacity style={styles.btn} onPress={handleChangePassword} disabled={loading}>
             {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.btnText}>Change Password</Text>}
           </TouchableOpacity>
+          {lastErrorDebug && (
+            <View style={{ marginTop: 12 }}>
+              <Text style={{ fontSize: 12, color: '#999' }}>Last error (debug):</Text>
+              <Text style={{ fontSize: 11, color: '#b00', marginTop: 6 }}>{JSON.stringify(lastErrorDebug)}</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -173,4 +236,15 @@ const styles = StyleSheet.create({
   btn: { backgroundColor: '#6C63FF', padding: 12, borderRadius: 10, marginTop: 16, alignItems: 'center' },
   btnText: { color: '#FFF', fontWeight: '700' },
   err: { color: '#C0392B', marginTop: 6 },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeBtn: {
+    padding: 8,
+    marginLeft: 8,
+  },
+  eyeText: {
+    fontSize: 18,
+  },
 });

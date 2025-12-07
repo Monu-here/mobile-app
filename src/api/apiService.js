@@ -50,13 +50,27 @@ class ApiService {
         body: options.data ? JSON.stringify(options.data) : undefined,
       });
 
-      const responseData = await response.json();
+      // Read raw text first so we can handle non-JSON responses (HTML error pages, etc.)
+      const rawText = await response.text();
+      let responseData = null;
+      try {
+        responseData = rawText ? JSON.parse(rawText) : null;
+      } catch (parseErr) {
+        // Not JSON — keep rawText available for debugging
+        responseData = null;
+        // eslint-disable-next-line no-console
+        console.warn('[apiService] Non-JSON response received for', url, 'status', response.status);
+        // eslint-disable-next-line no-console
+        console.warn('[apiService] Raw response text:', rawText ? rawText.substring(0, 1000) : '<empty>');
+      }
 
       if (!response.ok) {
+        // Try to extract a message from parsed JSON, otherwise use raw text or a generic message
+        const message = (responseData && (responseData.message || responseData.error)) || (rawText ? rawText : ERROR_MESSAGES.UNKNOWN_ERROR);
         throw {
           status: response.status,
-          message: responseData.message || ERROR_MESSAGES.UNKNOWN_ERROR,
-          data: responseData,
+          message,
+          data: responseData || rawText,
         };
       }
 
@@ -126,6 +140,9 @@ class ApiService {
       // Return a consistent shape
       return { raw: response, token, user };
     } catch (error) {
+      // Log login error for debugging and rethrow
+      // eslint-disable-next-line no-console
+      console.error('[apiService] login error:', error);
       throw error;
     }
   }
@@ -218,15 +235,27 @@ class ApiService {
   async changePassword(currentPassword, newPassword) {
     try {
       if (!currentPassword || !newPassword) throw { message: 'Both current and new passwords are required' };
+      // DO NOT log passwords themselves. Log call info for debugging.
+      // eslint-disable-next-line no-console
+      console.log('[apiService] changePassword called for endpoint', ENDPOINTS.CHANGE_PASSWORD);
+
       const response = await this.post(ENDPOINTS.CHANGE_PASSWORD, {
         current_password: currentPassword,
         new_password: newPassword,
+        new_password_confirmation: newPassword,
       });
+
+      // Log response for debugging (avoid sensitive fields)
+      // eslint-disable-next-line no-console
+      console.log('[apiService] changePassword response:', response);
 
       // Normalize message
       const message = response?.message || (response?.meta && response.meta.message) || (Array.isArray(response?.errors) ? response.errors[0] : null) || 'Password changed';
       return { raw: response, message };
     } catch (error) {
+      // Log error for debugging
+      // eslint-disable-next-line no-console
+      console.error('[apiService] changePassword error:', error);
       throw error;
     }
   }
