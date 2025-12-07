@@ -9,6 +9,75 @@ import {
   FlatList,
 } from 'react-native';
 
+// Helper to map role id to readable label
+function getRoleLabel(role) {
+  const map = {
+    0: 'Super Admin',
+    1: 'Admin',
+    2: 'Teacher',
+    3: 'Student',
+  };
+  return map[role] || `Role ${role ?? 'N/A'}`;
+}
+
+function renderRoleSpecific(user) {
+  if (!user) return <Text style={{ color: '#666' }}>No user data available.</Text>;
+
+  const role = user.role ?? user?.raw?.role ?? null;
+
+    if (role === 3) {
+    // Student
+    const student = user.student || user?.raw?.student || {};
+    return (
+      <View style={styles.roleBox}>
+        <Text style={styles.roleHeading}>Student Info</Text>
+        <Text style={styles.roleTextSmall}>Grade: {student?.grade ?? '—'}</Text>
+        <Text style={styles.roleTextSmall}>Section: {student?.section ?? '—'}</Text>
+        <Text style={styles.roleTextSmall}>Roll Number: {student?.roll_number ?? '—'}</Text>
+      </View>
+    );
+  }
+
+  if (role === 2) {
+    // Teacher
+    const teacher = user.teacher || user?.raw?.teacher || [];
+    return (
+      <View style={styles.roleBox}>
+        <Text style={styles.roleHeading}>Teacher Assignments</Text>
+        {Array.isArray(teacher) && teacher.length > 0 ? (
+          teacher.map((t, idx) => (
+            <Text key={String(idx)} style={styles.roleTextSmall}>
+              Grade ID: {t?.grade_id ?? '—'} • Section ID: {t?.section_id ?? '—'}
+            </Text>
+          ))
+        ) : (
+          <Text style={styles.roleTextSmall}>No assignment data available.</Text>
+        )}
+      </View>
+    );
+  }
+
+  if (role === 0) {
+    // Superadmin - show permissions/timestamp
+    const permissions = user.permissions || user?.raw?.permissions || [];
+    return (
+      <View style={styles.roleBox}>
+        <Text style={styles.roleHeading}>Super Admin</Text>
+        <Text style={styles.roleTextSmall}>Permissions: {Array.isArray(permissions) ? permissions.join(', ') || '—' : '—'}</Text>
+        <Text style={styles.roleTextSmall}>Timestamp: {user.timestamp ?? user?.raw?.timestamp ?? '—'}</Text>
+      </View>
+    );
+  }
+
+  // Default
+  return (
+    <View style={styles.roleBox}>
+      <Text style={styles.roleHeading}>Account</Text>
+      <Text style={styles.roleTextSmall}>Role: {getRoleLabel(role)}</Text>
+    </View>
+  );
+}
+
 export default function HomeScreen({ user, onLogout }) {
   const menuItems = [
     { id: '1', title: 'Dashboard', icon: '📊', color: '#6C63FF' },
@@ -34,7 +103,8 @@ export default function HomeScreen({ user, onLogout }) {
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Welcome Back! 👋</Text>
-            <Text style={styles.email}>{user?.email || 'User'}</Text>
+            <Text style={styles.email}>{user?.name || user?.email || 'User'}</Text>
+            <Text style={styles.roleText}>{getRoleLabel(user?.role)}</Text>
           </View>
           <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
             <Text style={styles.logoutText}>Logout</Text>
@@ -70,6 +140,12 @@ export default function HomeScreen({ user, onLogout }) {
             scrollEnabled={false}
             contentContainerStyle={styles.menuList}
           />
+        </View>
+
+        {/* Role-specific info */}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Account Details</Text>
+          {renderRoleSpecific(user)}
         </View>
 
         {/* Coming Soon Section */}
@@ -226,5 +302,31 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     fontWeight: '400',
+  },
+  roleBox: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  roleHeading: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  roleTextSmall: {
+    fontSize: 13,
+    color: '#444',
+    marginBottom: 6,
+  },
+  roleText: {
+    fontSize: 12,
+    color: '#666',
   },
 });

@@ -11,6 +11,14 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+import apiService from '../api/apiService';
+import {
+  storeToken,
+  storeUserData,
+  storeRememberMe,
+  clearRememberMe,
+} from '../utils/storage';
+import { showToast } from '../components/Toast';
 
 export default function LoginScreen({ onLoginSuccess, onNavigateSignUp }) {
   const [email, setEmail] = useState('');
@@ -48,17 +56,37 @@ export default function LoginScreen({ onLoginSuccess, onNavigateSignUp }) {
 
     setLoading(true);
     try {
-      // Simulate API call - replace with actual API endpoint
-      // await loginUser(email, password);
-      
-      // For now, simulate a successful login after 1 second
-      setTimeout(() => {
-        setLoading(false);
-        onLoginSuccess && onLoginSuccess({ email, rememberMe });
-      }, 1000);
+      // Call real API
+      const result = await apiService.login(email.trim(), password);
+
+      const token = result?.token;
+      const user = result?.user || result?.raw || null;
+
+      if (token) {
+        await storeToken(token);
+        apiService.setToken(token);
+      }
+
+      if (user) {
+        await storeUserData(user);
+      }
+
+      // Remember me stores email locally
+      if (rememberMe) {
+        await storeRememberMe(email.trim());
+      } else {
+        await clearRememberMe();
+      }
+
+  setLoading(false);
+  showToast('Signed in successfully', 'success');
+  onLoginSuccess && onLoginSuccess({ email: email.trim(), user });
     } catch (error) {
       setLoading(false);
-      setErrors({ submit: 'Login failed. Please try again.' });
+      // Try to show a meaningful message
+      const message = error?.message || (error?.data && error.data.message) || 'Login failed. Please try again.';
+      setErrors({ submit: message });
+      showToast(message, 'error');
     }
   };
 

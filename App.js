@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
 
@@ -27,7 +28,24 @@ export default function App() {
         const token = await getToken();
         if (token) {
           apiService.setToken(token);
-          setAppState('home');
+
+          // Validate token / get user info from backend
+          try {
+            const res = await apiService.authCheck();
+            const user = res?.user || res?.raw?.data || res?.raw || null;
+            setUser(user);
+            setAppState('home');
+          } catch (err) {
+            // Token invalid or auth-check failed
+            console.warn('Auth check failed:', err);
+            // Clear local token and go to login
+            try {
+              // best-effort clear
+              const { clearToken } = apiService;
+              clearToken && clearToken();
+            } catch (e) {}
+            setAppState('login');
+          }
         } else {
           setAppState('login');
         }
@@ -46,7 +64,9 @@ export default function App() {
   };
 
   const handleLoginSuccess = (userData) => {
-    setUser(userData);
+    // Normalize userData which may be either the raw user object or a wrapper { email, user }
+    const normalized = userData?.user ?? userData;
+    setUser(normalized);
     setAppState('home');
   };
 
@@ -78,6 +98,11 @@ export default function App() {
         <LoginScreen onLoginSuccess={handleLoginSuccess} onNavigateSignUp={handleNavigateSignUp} />
       )}
       {appState === 'home' && <HomeScreen user={user} onLogout={handleLogout} />}
+      {/* Global Toast container */}
+      <Toast />
     </>
   );
 }
+
+// Render Toast at the top-level so any screen can call showToast()
+// Note: Toast is included in the component tree above via import and will be rendered inside App's return.

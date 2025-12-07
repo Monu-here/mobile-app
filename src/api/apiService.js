@@ -114,13 +114,17 @@ class ApiService {
   async login(email, password) {
     try {
       const response = await this.post(ENDPOINTS.LOGIN, { email, password });
-      
-      // Store token if returned
-      if (response.token) {
-        this.setToken(response.token);
+
+      // Normalize and extract token from common response shapes
+      const token = response?.token || response?.access_token || response?.data?.token || response?.auth?.token || null;
+      const user = response?.user || response?.data?.user || response?.data || null;
+
+      if (token) {
+        this.setToken(token);
       }
-      
-      return response;
+
+      // Return a consistent shape
+      return { raw: response, token, user };
     } catch (error) {
       throw error;
     }
@@ -162,6 +166,29 @@ class ApiService {
   async getProfile() {
     try {
       return await this.get(ENDPOINTS.PROFILE);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Auth check - returns detailed user info including role, student/teacher data and permissions
+   */
+  async authCheck() {
+    try {
+      const response = await this.get(ENDPOINTS.AUTH_CHECK);
+
+      // The backend may wrap data differently. Try to normalize:
+      // Common shapes: { success: true, data: { ... } } or direct { user_id, name, role, ... }
+      const data = response?.data || response || {};
+
+      // If wrapper has success flag and empty data when unauthenticated, handle that upstream
+      const userInfo = data;
+
+      // response may contain token inside data.token as per RoleHelper
+      const token = data?.token || response?.token || null;
+
+      return { raw: response, user: userInfo, token };
     } catch (error) {
       throw error;
     }
