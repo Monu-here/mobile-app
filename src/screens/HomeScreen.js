@@ -1,0 +1,230 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+
+export default function HomeScreen({ user, onLogout }) {
+  const menuItems = [
+    { id: '1', title: 'Dashboard', icon: '📊', color: '#6C63FF' },
+    { id: '2', title: 'Classes', icon: '📚', color: '#00BFA6' },
+    { id: '3', title: 'Attendance', icon: '✓', color: '#FF6B6B' },
+    { id: '4', title: 'Messages', icon: '💬', color: '#FFA41B' },
+    { id: '5', title: 'Reports', icon: '📄', color: '#00D4FF' },
+    { id: '6', title: 'Settings', icon: '⚙️', color: '#9C63FF' },
+  ];
+
+  const renderMenuItem = ({ item }) => (
+    <TouchableOpacity style={[styles.menuCard, { borderLeftColor: item.color }]}>
+      <Text style={styles.menuIcon}>{item.icon}</Text>
+      <Text style={styles.menuTitle}>{item.title}</Text>
+      <Text style={styles.menuArrow}>→</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.greeting}>Welcome Back! 👋</Text>
+            <Text style={styles.email}>{user?.email || 'User'}</Text>
+          </View>
+          <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Quick Stats */}
+        <View style={styles.statsContainer}>
+          <View style={[styles.statCard, { backgroundColor: '#E8E4F8' }]}>
+            <Text style={styles.statIcon}>📊</Text>
+            <Text style={styles.statLabel}>Classes</Text>
+            <Text style={styles.statValue}>12</Text>
+          </View>
+          <View style={[styles.statCard, { backgroundColor: '#E0F7F4' }]}>
+            <Text style={styles.statIcon}>👥</Text>
+            <Text style={styles.statLabel}>Students</Text>
+            <Text style={styles.statValue}>485</Text>
+          </View>
+          <View style={[styles.statCard, { backgroundColor: '#FFE8E8' }]}>
+            <Text style={styles.statIcon}>✓</Text>
+            <Text style={styles.statLabel}>Attendance</Text>
+            <Text style={styles.statValue}>94%</Text>
+          </View>
+        </View>
+
+        {/* Recent Activity */}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Quick Access</Text>
+          <FlatList
+            data={menuItems}
+            renderItem={renderMenuItem}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            contentContainerStyle={styles.menuList}
+          />
+        </View>
+
+        {/* Coming Soon Section */}
+        <View style={styles.comingSoonContainer}>
+          <Text style={styles.comingSoonTitle}>🚀 Features Coming Soon</Text>
+          <Text style={styles.comingSoonText}>
+            More features will be available once you integrate the backend APIs.
+          </Text>
+          <Text style={styles.comingSoonSubtext}>
+            Ready to add your API? Just provide the endpoints and authentication details.
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAFA',
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 28,
+    paddingVertical: 16,
+  },
+  greeting: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 4,
+    letterSpacing: 0.3,
+  },
+  email: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  logoutButton: {
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  logoutText: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 28,
+  },
+  statCard: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statIcon: {
+    fontSize: 28,
+    marginBottom: 6,
+  },
+  statLabel: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  statValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  sectionContainer: {
+    marginBottom: 28,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 14,
+    letterSpacing: 0.2,
+  },
+  menuList: {
+    gap: 8,
+  },
+  menuCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderLeftWidth: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  menuIcon: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  menuTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    flex: 1,
+  },
+  menuArrow: {
+    fontSize: 16,
+    color: '#DDD',
+    fontWeight: '600',
+  },
+  comingSoonContainer: {
+    backgroundColor: '#E8E4F8',
+    borderRadius: 14,
+    padding: 18,
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  comingSoonTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#6C63FF',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  comingSoonText: {
+    fontSize: 13,
+    color: '#1A1A1A',
+    textAlign: 'center',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  comingSoonSubtext: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    fontWeight: '400',
+  },
+});
