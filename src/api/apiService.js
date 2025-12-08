@@ -144,6 +144,121 @@ class ApiService {
   }
 
   /**
+   * Get branches list
+   */
+  async getBranches() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getBranches called');
+      const response = await this.get(ENDPOINTS.BRANCH_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getBranches error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new branch
+   * @param {Object} payload { name, address, status }
+   */
+  async addBranch(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addBranch called', payload);
+      const response = await this.post(ENDPOINTS.BRANCH_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add branch';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Branch added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addBranch error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a branch
+   * @param {number} id - The ID of the branch to update
+   * @param {Object} payload { name, address, status }
+   */
+  async updateBranch(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateBranch called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.BRANCH_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update branch';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Branch updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateBranch error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a branch
+   * @param {number} id - The ID of the branch to delete
+   */
+  async deleteBranch(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteBranch called with id:', id);
+      const url = ENDPOINTS.BRANCH_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete branch';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Branch deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteBranch error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

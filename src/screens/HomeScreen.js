@@ -79,7 +79,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch}) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleMenuItemPress = (item) => {
@@ -101,9 +101,12 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
       if (onNavigateAcademicYear) {
         onNavigateAcademicYear();
       }
-    } else if (item.id === '6.3') {
-      // Notifications
-      console.log('Navigating to Notifications');
+    } else if (item.id === '6.6') {
+      // Branch
+      if (onNavigateBranch) {
+        onNavigateBranch();
+      }
+      console.log('Navigating to Branch');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

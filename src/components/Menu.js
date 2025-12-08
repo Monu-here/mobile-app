@@ -65,6 +65,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '📆',
         },
         {
+          id: '6.6',
+          title: 'Branch',
+          icon: '🏢',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

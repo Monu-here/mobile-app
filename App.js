@@ -8,6 +8,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import SchoolSettingsScreen from './src/screens/SchoolSettingsScreen';
 import SettingsListScreen from './src/screens/SettingsListScreen';
 import AcademicYearScreen from './src/screens/AcademicYearScreen';
+import BranchScreen from './src/screens/BranchScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -99,6 +100,9 @@ export default function App() {
   const handleNavigateAcademicYear = () => {
     setAppState('academicYear');
   };
+  const handleNavigateBranch = () => {
+    setAppState('branch');
+  }
 
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
@@ -150,12 +154,14 @@ export default function App() {
           onNavigateProfile={handleNavigateProfile}
           onNavigateSchoolSettings={handleNavigateSchoolSettings}
           onNavigateAcademicYear={handleNavigateAcademicYear}
+          onNavigateBranch={handleNavigateBranch}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
       {appState === 'schoolSettings' && <SchoolSettingsScreen onBack={handleSchoolSettingsBack} />}
   {appState === 'settingsList' && <SettingsListScreen onBack={handleSettingsListBack} />}
     {appState === 'academicYear' && <AcademicYearScreen onBack={() => setAppState('home')} />}
+    {appState === 'branch' && <BranchScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

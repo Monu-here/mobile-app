@@ -21,6 +21,11 @@ export const ENDPOINTS = {
   ACADEMIC_YEAR_GET: '/admin/settings/academic-year',
   ACADEMIC_YEAR_UPDATE: '/admin/settings/academic-year/update/{id}',
   ACADEMIC_YEAR_DELETE: '/admin/settings/academic-year/delete/{id}',
+  // Branch endpoints
+  BRANCH_ADD: '/admin/settings/branch/add',
+  BRANCH_GET: '/admin/settings/branch',
+  BRANCH_UPDATE: '/admin/settings/branch/update/{id}',
+  BRANCH_DELETE: '/admin/settings/branch/delete/{id}',
 };
 
 // HTTP Methods
