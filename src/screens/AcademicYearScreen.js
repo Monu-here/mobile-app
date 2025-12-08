@@ -63,32 +63,68 @@ export default function AcademicYearScreen({ onBack }) {
 
     setSubmitting(true);
     try {
+      console.log('Adding academic year with payload:', payload);
       const res = await apiService.addAcademicYear(payload);
-      // store debug
+      console.log('Add response:', res);
       setLastResponseDebug(JSON.stringify(res?.raw || res, null, 2));
 
-      showToast(res?.message || 'Academic year added', 'success');
-      // refresh list
-      await fetchYears();
-      // reset form
+      showToast(res?.message || 'Academic year added successfully', 'success');
+      
+      // Immediately reset form
       setName('');
       setStartDate('');
       setEndDate('');
       setStatus(true);
+      
+      // Force a refresh from the API
+      console.log('Refreshing academic years list...');
+      await fetchYears();
+      console.log('List refreshed after add');
     } catch (err) {
       console.error('addAcademicYear error:', err);
       const msg = err?.message || (err?.data && JSON.stringify(err.data)) || 'Failed to add academic year';
       showToast(msg, 'error');
-      setLastResponseDebug(JSON.stringify(err || {}, null, 2));
+      setLastResponseDebug(JSON.stringify({
+        error: err,
+        message: msg,
+        payload
+      }, null, 2));
     } finally {
       setSubmitting(false);
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      console.log('Deleting academic year with id:', id);
+      const res = await apiService.deleteAcademicYear(id);
+      console.log('Delete response:', res);
+      showToast('Academic year deleted successfully', 'success');
+      
+      // Wait for list to refresh before returning
+      console.log('Refreshing list after delete...');
+      await fetchYears();
+      console.log('List refreshed after delete');
+    } catch (err) {
+      console.error('Error deleting academic year:', err);
+      showToast('Failed to delete academic year', 'error');
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text style={styles.cardMeta}>Start: {item.start_date} • End: {item.end_date} • Status: {item.status ? 'Active' : 'Inactive'}</Text>
+      <View style={styles.cardContent}>
+        <View style={styles.cardTextContainer}>
+          <Text style={styles.cardTitle}>{item.name}</Text>
+          <Text style={styles.cardMeta}>Start: {item.start_date} • End: {item.end_date} • Status: {item.status ? 'Active' : 'Inactive'}</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.deleteButton}
+          onPress={() => handleDelete(item.id)}
+        >
+          <Text style={styles.deleteButtonText}>🗑️ Delete</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -111,14 +147,14 @@ export default function AcademicYearScreen({ onBack }) {
           style={styles.input}
         />
         <TextInput
-          placeholder="Start (numeric)"
+          placeholder="Start Year (e.g. 2025)"
           value={startDate}
           onChangeText={setStartDate}
           keyboardType="numeric"
           style={styles.input}
         />
         <TextInput
-          placeholder="End (numeric)"
+          placeholder="End Year (e.g. 2026)"
           value={endDate}
           onChangeText={setEndDate}
           keyboardType="numeric"
@@ -181,7 +217,21 @@ const styles = StyleSheet.create({
   submitText: { color: '#FFF', fontWeight: '700' },
   listContainer: { flex: 1, paddingHorizontal: 12 },
   card: { backgroundColor: '#FFF', padding: 12, borderRadius: 10, marginVertical: 8 },
+  cardContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  cardTextContainer: { flex: 1 },
   cardTitle: { fontSize: 16, fontWeight: '700', color: '#1A1A1A' },
   cardMeta: { fontSize: 13, color: '#666', marginTop: 6 },
+  deleteButton: { 
+    backgroundColor: '#E53935', 
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginLeft: 12
+  },
+  deleteButtonText: { 
+    color: '#FFF', 
+    fontWeight: '700',
+    fontSize: 12
+  },
   errorText: { color: '#E53935', textAlign: 'center', marginTop: 12 },
 });

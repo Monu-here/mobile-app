@@ -56,6 +56,17 @@ class ApiService {
       // eslint-disable-next-line no-console
       console.log('[apiService] Token exists?', !!this.token, 'Token preview:', this.token ? this.token.substring(0, 20) + '...' : 'NO TOKEN');
       const response = await this.post(ENDPOINTS.ACADEMIC_YEAR_ADD, payload);
+      
+      // Check if API returned an error (status: false or status field indicates failure)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add academic year';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
       const raw = response;
       const data = (response && (response.data?.data || response.data)) || response || null;
       const message = response?.message || 'Academic year added';
@@ -63,6 +74,38 @@ class ApiService {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('[apiService] addAcademicYear error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete an academic year
+   * @param {number} id - The ID of the academic year to delete
+   */
+  async deleteAcademicYear(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteAcademicYear called with id:', id);
+      const url = ENDPOINTS.ACADEMIC_YEAR_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete academic year';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic year deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteAcademicYear error:', error);
       throw error;
     }
   }
