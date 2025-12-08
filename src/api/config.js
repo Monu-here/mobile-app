@@ -19,6 +19,7 @@ export const ENDPOINTS = {
   // Academic year endpoints
   ACADEMIC_YEAR_ADD: '/admin/settings/academic-year/add',
   ACADEMIC_YEAR_GET: '/admin/settings/academic-year',
+  ACADEMIC_YEAR_UPDATE: '/admin/settings/academic-year/update/{id}',
   ACADEMIC_YEAR_DELETE: '/admin/settings/academic-year/delete/{id}',
 };
 

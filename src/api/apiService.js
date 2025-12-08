@@ -79,6 +79,39 @@ class ApiService {
   }
 
   /**
+   * Update an academic year
+   * @param {number} id - The ID of the academic year to update
+   * @param {Object} payload { name, start_date, end_date, status }
+   */
+  async updateAcademicYear(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateAcademicYear called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.ACADEMIC_YEAR_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update academic year';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic year updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateAcademicYear error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Delete an academic year
    * @param {number} id - The ID of the academic year to delete
    */
