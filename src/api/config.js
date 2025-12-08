@@ -13,6 +13,12 @@ export const ENDPOINTS = {
   PROFILE: '/user/profile',
   REFRESH_TOKEN: '/auth/refresh',
   CONFIG_VERSION_CHECK: '/admin/config-version-check',
+  SCHOOL_SETTINGS: '/admin/settings/setting/add',
+  // GET current settings (assumed endpoint)
+  SCHOOL_SETTINGS_GET: '/admin/settings/setting',
+  // Academic year endpoints
+  ACADEMIC_YEAR_ADD: '/admin/settings/academic-year/add',
+  ACADEMIC_YEAR_GET: '/admin/settings/academic-year',
 };
 
 // HTTP Methods

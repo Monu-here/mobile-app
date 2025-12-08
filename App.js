@@ -5,6 +5,9 @@ import OnboardingScreen from './src/screens/OnboardingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import SchoolSettingsScreen from './src/screens/SchoolSettingsScreen';
+import SettingsListScreen from './src/screens/SettingsListScreen';
+import AcademicYearScreen from './src/screens/AcademicYearScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -12,7 +15,7 @@ import { getFcmToken } from './src/utils/storage';
 import { showToast } from './src/components/Toast';
 
 export default function App() {
-  const [appState, setAppState] = useState('loading'); // 'loading', 'onboarding', 'login', 'home'
+  const [appState, setAppState] = useState('loading'); // 'loading', 'onboarding', 'login', 'home', 'profile', 'schoolSettings'
   const [user, setUser] = useState(null);
 
   // Initialize app state on mount
@@ -89,7 +92,27 @@ export default function App() {
     setAppState('profile');
   };
 
+  const handleNavigateSchoolSettings = () => {
+    setAppState('schoolSettings');
+  };
+
+  const handleNavigateAcademicYear = () => {
+    setAppState('academicYear');
+  };
+
+  const handleNavigateSettingsList = () => {
+    setAppState('settingsList');
+  };
+
   const handleProfileBack = () => {
+    setAppState('home');
+  };
+
+  const handleSchoolSettingsBack = () => {
+    setAppState('home');
+  };
+
+  const handleSettingsListBack = () => {
     setAppState('home');
   };
 
@@ -120,8 +143,19 @@ export default function App() {
       {appState === 'login' && (
         <LoginScreen onLoginSuccess={handleLoginSuccess} onNavigateSignUp={handleNavigateSignUp} />
       )}
-  {appState === 'home' && <HomeScreen user={user} onLogout={handleLogout} onNavigateProfile={handleNavigateProfile} />}
-  {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
+      {appState === 'home' && (
+        <HomeScreen
+          user={user}
+          onLogout={handleLogout}
+          onNavigateProfile={handleNavigateProfile}
+          onNavigateSchoolSettings={handleNavigateSchoolSettings}
+          onNavigateAcademicYear={handleNavigateAcademicYear}
+        />
+      )}
+      {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
+      {appState === 'schoolSettings' && <SchoolSettingsScreen onBack={handleSchoolSettingsBack} />}
+  {appState === 'settingsList' && <SettingsListScreen onBack={handleSettingsListBack} />}
+    {appState === 'academicYear' && <AcademicYearScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

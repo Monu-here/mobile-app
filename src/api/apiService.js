@@ -7,6 +7,67 @@ class ApiService {
   }
 
   /**
+   * Get current school settings
+   */
+  async getSchoolSettings() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSchoolSettings called');
+      const response = await this.get(ENDPOINTS.SCHOOL_SETTINGS_GET);
+
+      // Normalize response similar to other methods
+      const data = response?.data || response || null;
+      const message = response?.message || null;
+      return { raw: response, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSchoolSettings error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get academic years list
+   */
+  async getAcademicYears() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getAcademicYears called');
+      const response = await this.get(ENDPOINTS.ACADEMIC_YEAR_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getAcademicYears error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new academic year
+   * @param {Object} payload { name, start_date, end_date, status }
+   */
+  async addAcademicYear(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addAcademicYear called', payload);
+      // eslint-disable-next-line no-console
+      console.log('[apiService] Token exists?', !!this.token, 'Token preview:', this.token ? this.token.substring(0, 20) + '...' : 'NO TOKEN');
+      const response = await this.post(ENDPOINTS.ACADEMIC_YEAR_ADD, payload);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic year added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addAcademicYear error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {
@@ -76,13 +137,17 @@ class ApiService {
 
       return responseData;
     } catch (error) {
-      if (error.message && error.message.includes('Network')) {
+      // Map native fetch/network errors (TypeError) to a clear network message.
+      // Our code above throws plain objects for HTTP errors (status, message, data),
+      // so only transform real Error instances that look like network failures.
+      if (error instanceof Error && (error.name === 'TypeError' || (error.message && error.message.includes('Network')))) {
         throw {
           status: 0,
           message: ERROR_MESSAGES.NETWORK_ERROR,
           error,
         };
       }
+      // Otherwise rethrow the original error object (may contain status, data, raw HTML, etc.)
       throw error;
     }
   }
@@ -274,6 +339,90 @@ class ApiService {
       return response;
     } catch (error) {
       this.clearToken();
+      throw error;
+    }
+  }
+
+  /**
+   * Get or update school settings
+   */
+  async updateSchoolSettings(settingsData) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSchoolSettings called');
+
+      const url = `${this.baseURL}${ENDPOINTS.SCHOOL_SETTINGS}`;
+      
+      const headers = {};
+
+      // Add auth token if available
+      if (this.token) {
+        headers['Authorization'] = `Bearer ${this.token}`;
+      }
+
+      // Determine if this is FormData (for file uploads) or JSON
+      const isFormData = settingsData instanceof FormData;
+      
+      if (!isFormData) {
+        headers['Content-Type'] = 'application/json';
+      }
+      // If FormData, don't set Content-Type - fetch will set it automatically with boundary
+
+      // Log the request details
+      // eslint-disable-next-line no-console
+      console.log('[apiService] Sending request to:', url);
+      // eslint-disable-next-line no-console
+      console.log('[apiService] Headers:', headers);
+      
+      if (isFormData) {
+        // eslint-disable-next-line no-console
+        console.log('[apiService] Data: FormData (multipart) - file upload');
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('[apiService] Data:', JSON.stringify(settingsData));
+      }
+
+      const fetchOptions = {
+        method: 'POST',
+        headers,
+        body: isFormData ? settingsData : JSON.stringify(settingsData),
+      };
+
+      const response = await fetch(url, fetchOptions);
+
+      // Read raw text first
+      const rawText = await response.text();
+      let responseData = null;
+      try {
+        responseData = rawText ? JSON.parse(rawText) : null;
+      } catch (parseErr) {
+        // eslint-disable-next-line no-console
+        console.warn('[apiService] Non-JSON response:', rawText ? rawText.substring(0, 500) : '<empty>');
+      }
+
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSchoolSettings response status:', response.status);
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSchoolSettings response:', responseData || rawText);
+
+      if (!response.ok) {
+        const message = (responseData && (responseData.message || responseData.error)) || 
+                       (rawText ? rawText : 'Failed to update school settings');
+        throw {
+          status: response.status,
+          message,
+          data: responseData || rawText,
+        };
+      }
+
+      // Normalize response
+      const data = responseData?.data || responseData;
+      const message = responseData?.message || 'School settings updated successfully';
+      
+      return { raw: responseData, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateSchoolSettings error:', error);
       throw error;
     }
   }

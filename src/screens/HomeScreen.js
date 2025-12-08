@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
+import Menu from '../components/Menu';
 
 // Helper to map role id to readable label
 function getRoleLabel(role) {
@@ -78,7 +79,38 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear }) {
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const handleMenuItemPress = (item) => {
+    console.log('Menu item pressed:', item.title);
+    // Handle menu item navigation here
+    if (item.id === '6.1') {
+      // School Settings
+      console.log('Navigating to School Settings');
+      if (onNavigateSchoolSettings) {
+        onNavigateSchoolSettings();
+      }
+      setMenuVisible(false);
+    } else if (item.id === '6.2') {
+      // User Preferences
+      console.log('Navigating to User Preferences');
+    } else if (item.id === '6.5') {
+      // Academic Year
+      console.log('Navigating to Academic Year');
+      if (onNavigateAcademicYear) {
+        onNavigateAcademicYear();
+      }
+    } else if (item.id === '6.3') {
+      // Notifications
+      console.log('Navigating to Notifications');
+    } else if (item.id === '6.4') {
+      // Privacy & Security
+      console.log('Navigating to Privacy & Security');
+    }
+    // Add more navigation handlers as needed
+  };
+
   const menuItems = [
     { id: '1', title: 'Dashboard', icon: '📊', color: '#6C63FF' },
     { id: '2', title: 'Classes', icon: '📚', color: '#00BFA6' },
@@ -106,6 +138,9 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile }) {
             <Text style={styles.email}>{user?.name || user?.email || 'User'}</Text>
             <Text style={styles.roleText}>{getRoleLabel(user?.role)}</Text>
           </View>
+          <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(true)}>
+            <Text style={styles.menuButtonText}>☰</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
@@ -162,6 +197,13 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile }) {
           </Text>
         </View>
       </ScrollView>
+
+      {/* Menu Modal */}
+      <Menu
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        onMenuItemPress={handleMenuItemPress}
+      />
     </SafeAreaView>
   );
 }
@@ -203,6 +245,20 @@ const styles = StyleSheet.create({
   logoutText: {
     color: '#FFF',
     fontSize: 12,
+    fontWeight: '700',
+  },
+  menuButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#6C63FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 8,
+  },
+  menuButtonText: {
+    fontSize: 20,
+    color: '#FFF',
     fontWeight: '700',
   },
   statsContainer: {
