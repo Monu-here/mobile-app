@@ -26,6 +26,21 @@ export const ENDPOINTS = {
   BRANCH_GET: '/admin/settings/branch',
   BRANCH_UPDATE: '/admin/settings/branch/update/{id}',
   BRANCH_DELETE: '/admin/settings/branch/delete/{id}',
+  // Pickup Point endpoints
+  PICKUP_POINT_ADD: '/admin/settings/pick-up-point/add',
+  PICKUP_POINT_GET: '/admin/settings/pick-up-point',
+  PICKUP_POINT_UPDATE: '/admin/settings/pick-up-point/update/{id}',
+  PICKUP_POINT_DELETE: '/admin/settings/pick-up-point/delete/{id}',
+  // Grade endpoints
+  GRADE_ADD: '/admin/settings/grade/add',
+  GRADE_GET: '/admin/settings/grade',
+  GRADE_UPDATE: '/admin/settings/grade/update/{id}',
+  GRADE_DELETE: '/admin/settings/grade/delete/{id}',
+  // Section endpoints
+  SECTION_ADD: '/admin/settings/section/add',
+  SECTION_GET: '/admin/settings/section',
+  SECTION_UPDATE: '/admin/settings/section/update/{id}',
+  SECTION_DELETE: '/admin/settings/section/delete/{id}',
 };
 
 // HTTP Methods

@@ -9,6 +9,9 @@ import SchoolSettingsScreen from './src/screens/SchoolSettingsScreen';
 import SettingsListScreen from './src/screens/SettingsListScreen';
 import AcademicYearScreen from './src/screens/AcademicYearScreen';
 import BranchScreen from './src/screens/BranchScreen';
+import PickupPointScreen from './src/screens/PickupPointScreen';
+import GradeScreen from './src/screens/GradeScreen';
+import SectionScreen from './src/screens/SectionScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -103,6 +106,15 @@ export default function App() {
   const handleNavigateBranch = () => {
     setAppState('branch');
   }
+  const handleNavigatePickupPoint = () => {
+    setAppState('pickupPoint');
+  }
+  const handleNavigateGrade = () => {
+    setAppState('grade');
+  }
+  const handleNavigateSection = () => {
+    setAppState('section');
+  }
 
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
@@ -155,6 +167,9 @@ export default function App() {
           onNavigateSchoolSettings={handleNavigateSchoolSettings}
           onNavigateAcademicYear={handleNavigateAcademicYear}
           onNavigateBranch={handleNavigateBranch}
+          onNavigatePickupPoint={handleNavigatePickupPoint}
+          onNavigateGrade={handleNavigateGrade}
+          onNavigateSection={handleNavigateSection}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -162,6 +177,9 @@ export default function App() {
   {appState === 'settingsList' && <SettingsListScreen onBack={handleSettingsListBack} />}
     {appState === 'academicYear' && <AcademicYearScreen onBack={() => setAppState('home')} />}
     {appState === 'branch' && <BranchScreen onBack={() => setAppState('home')} />}
+    {appState === 'pickupPoint' && <PickupPointScreen onBack={() => setAppState('home')} />}
+    {appState === 'grade' && <GradeScreen onBack={() => setAppState('home')} />}
+    {appState === 'section' && <SectionScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

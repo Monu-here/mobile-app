@@ -259,6 +259,351 @@ class ApiService {
   }
 
   /**
+   * Get pickup points list
+   */
+  async getPickupPoints() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPickupPoints called');
+      const response = await this.get(ENDPOINTS.PICKUP_POINT_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getPickupPoints error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new pickup point
+   * @param {Object} payload { name, longitude, latitude, status }
+   */
+  async addPickupPoint(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addPickupPoint called', payload);
+      const response = await this.post(ENDPOINTS.PICKUP_POINT_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add pickup point';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Pickup point added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addPickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a pickup point
+   * @param {number} id - The ID of the pickup point to update
+   * @param {Object} payload { name, longitude, latitude, status }
+   */
+  async updatePickupPoint(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updatePickupPoint called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.PICKUP_POINT_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update pickup point';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Pickup point updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updatePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a pickup point
+   * @param {number} id - The ID of the pickup point to delete
+   */
+  async deletePickupPoint(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deletePickupPoint called with id:', id);
+      const url = ENDPOINTS.PICKUP_POINT_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete pickup point';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Pickup point deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deletePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get grades list
+   */
+  async getGrades() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getGrades called');
+      const response = await this.get(ENDPOINTS.GRADE_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getGrades error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new grade
+   * @param {Object} payload { name, branch_id, status }
+   */
+  async addGrade(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addGrade called', payload);
+      const response = await this.post(ENDPOINTS.GRADE_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Grade added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a grade
+   * @param {number} id - The ID of the grade to update
+   * @param {Object} payload { name, branch_id, status }
+   */
+  async updateGrade(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateGrade called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.GRADE_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Grade updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a grade
+   * @param {number} id - The ID of the grade to delete
+   */
+  async deleteGrade(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteGrade called with id:', id);
+      const url = ENDPOINTS.GRADE_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Grade deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get sections list
+   */
+  async getSections() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSections called');
+      const response = await this.get(ENDPOINTS.SECTION_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSections error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new section
+   * @param {Object} payload { name, grade_id, status }
+   */
+  async addSection(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addSection called', payload);
+      const response = await this.post(ENDPOINTS.SECTION_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add section';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Section added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addSection error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a section
+   * @param {number} id - The ID of the section to update
+   * @param {Object} payload { name, grade_id, status }
+   */
+  async updateSection(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSection called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.SECTION_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update section';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Section updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateSection error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a section
+   * @param {number} id - The ID of the section to delete
+   */
+  async deleteSection(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteSection called with id:', id);
+      const url = ENDPOINTS.SECTION_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete section';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Section deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteSection error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

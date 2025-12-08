@@ -79,7 +79,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection}) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleMenuItemPress = (item) => {
@@ -93,8 +93,7 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
       }
       setMenuVisible(false);
     } else if (item.id === '6.2') {
-      // User Preferences
-      console.log('Navigating to User Preferences');
+       console.log('Navigating to User Preferences');
     } else if (item.id === '6.5') {
       // Academic Year
       console.log('Navigating to Academic Year');
@@ -107,6 +106,24 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateBranch();
       }
       console.log('Navigating to Branch');
+    } else if (item.id === '6.7') {
+      // Pickup Point
+      if (onNavigatePickupPoint) {
+        onNavigatePickupPoint();
+      }
+      console.log('Navigating to Pickup Point');
+    } else if (item.id === '6.8') {
+      // Grade
+      if (onNavigateGrade) {
+        onNavigateGrade();
+      }
+      console.log('Navigating to Grade');
+    } else if (item.id === '6.9') {
+      // Section
+      if (onNavigateSection) {
+        onNavigateSection();
+      }
+      console.log('Navigating to Section');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

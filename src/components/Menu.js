@@ -70,6 +70,21 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '🏢',
         },
         {
+          id: '6.7',
+          title: 'Pickup Point',
+          icon: '📍',
+        },
+        {
+          id: '6.8',
+          title: 'Grade',
+          icon: '📊',
+        },
+        {
+          id: '6.9',
+          title: 'Section',
+          icon: '📂',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',
