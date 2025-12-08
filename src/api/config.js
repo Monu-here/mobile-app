@@ -41,6 +41,8 @@ export const ENDPOINTS = {
   SECTION_GET: '/admin/settings/section',
   SECTION_UPDATE: '/admin/settings/section/update/{id}',
   SECTION_DELETE: '/admin/settings/section/delete/{id}',
+  // Dashboard count endpoint
+  DASHBOARD_COUNT: '/admin/settings/count',
 };
 
 // HTTP Methods
