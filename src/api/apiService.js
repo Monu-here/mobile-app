@@ -604,6 +604,243 @@ class ApiService {
   }
 
   /**
+   * Get RFID list
+   */
+  async getRfids() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getRfids called');
+      const response = await this.get(ENDPOINTS.RFID_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getRfids error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new RFID
+   * @param {Object} payload { name, rfid_no, type, status }
+   */
+  async addRfid(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addRfid called', payload);
+      const response = await this.post(ENDPOINTS.RFID_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an RFID
+   * @param {number} id - The ID of the RFID to update
+   * @param {Object} payload { name, rfid_no, type, status }
+   */
+  async updateRfid(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateRfid called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.RFID_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete an RFID
+   * @param {number} id - The ID of the RFID to delete
+   */
+  async deleteRfid(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteRfid called with id:', id);
+      const url = ENDPOINTS.RFID_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all vehicles
+   */
+  async getVehicles() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getVehicles called');
+      const response = await this.get(ENDPOINTS.VEHICLE_GET);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch vehicles';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicles fetched';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getVehicles error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add new vehicle
+   */
+  async addVehicle(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addVehicle called with payload:', payload);
+      const response = await this.post(ENDPOINTS.VEHICLE_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update vehicle
+   */
+  async updateVehicle(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateVehicle called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.VEHICLE_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete vehicle
+   */
+  async deleteVehicle(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteVehicle called with id:', id);
+      const url = ENDPOINTS.VEHICLE_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

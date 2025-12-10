@@ -41,6 +41,16 @@ export const ENDPOINTS = {
   SECTION_GET: '/admin/settings/section',
   SECTION_UPDATE: '/admin/settings/section/update/{id}',
   SECTION_DELETE: '/admin/settings/section/delete/{id}',
+  // RFID endpoints
+  RFID_ADD: '/admin/settings/rfid/add',
+  RFID_GET: '/admin/settings/rfid',
+  RFID_UPDATE: '/admin/settings/rfid/update/{id}',
+  RFID_DELETE: '/admin/settings/rfid/delete/{id}',
+  // Vehicle endpoints
+  VEHICLE_ADD: '/admin/settings/vehicle/add',
+  VEHICLE_GET: '/admin/settings/vehicle',
+  VEHICLE_UPDATE: '/admin/settings/vehicle/update/{id}',
+  VEHICLE_DELETE: '/admin/settings/vehicle/delete/{id}',
 };
 
 // HTTP Methods
