@@ -12,6 +12,8 @@ import BranchScreen from './src/screens/BranchScreen';
 import PickupPointScreen from './src/screens/PickupPointScreen';
 import GradeScreen from './src/screens/GradeScreen';
 import SectionScreen from './src/screens/SectionScreen';
+import RFIDScreen from './src/screens/RFIDScreen';
+import VehicleScreen from './src/screens/VehicleScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -115,6 +117,12 @@ export default function App() {
   const handleNavigateSection = () => {
     setAppState('section');
   }
+  const handleNavigateRfid = () => {
+    setAppState('rfid');
+  }
+  const handleNavigateVehicle = () => {
+    setAppState('vehicle');
+  }
 
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
@@ -170,6 +178,8 @@ export default function App() {
           onNavigatePickupPoint={handleNavigatePickupPoint}
           onNavigateGrade={handleNavigateGrade}
           onNavigateSection={handleNavigateSection}
+          onNavigateRfid={handleNavigateRfid}
+          onNavigateVehicle={handleNavigateVehicle}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -180,6 +190,8 @@ export default function App() {
     {appState === 'pickupPoint' && <PickupPointScreen onBack={() => setAppState('home')} />}
     {appState === 'grade' && <GradeScreen onBack={() => setAppState('home')} />}
     {appState === 'section' && <SectionScreen onBack={() => setAppState('home')} />}
+      {appState === 'rfid' && <RFIDScreen onBack={() => setAppState('home')} />}
+      {appState === 'vehicle' && <VehicleScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

@@ -83,7 +83,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle}) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
@@ -149,6 +149,18 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateSection();
       }
       console.log('Navigating to Section');
+    } else if (item.id === '6.10') {
+      // RFID
+      if (onNavigateRfid) {
+        onNavigateRfid();
+      }
+      console.log('Navigating to RFID');
+    } else if (item.id === '6.11') {
+      // Vehicle
+      if (onNavigateVehicle) {
+        onNavigateVehicle();
+      }
+      console.log('Navigating to Vehicle');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');
