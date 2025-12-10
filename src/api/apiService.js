@@ -623,6 +623,856 @@ class ApiService {
   }
 
   /**
+   * Get RFID list
+   */
+  async getRfids() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getRfids called');
+      const response = await this.get(ENDPOINTS.RFID_GET);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getRfids error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new RFID
+   * @param {Object} payload { name, rfid_no, type, status }
+   */
+  async addRfid(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addRfid called', payload);
+      const response = await this.post(ENDPOINTS.RFID_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an RFID
+   * @param {number} id - The ID of the RFID to update
+   * @param {Object} payload { name, rfid_no, type, status }
+   */
+  async updateRfid(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateRfid called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.RFID_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete an RFID
+   * @param {number} id - The ID of the RFID to delete
+   */
+  async deleteRfid(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteRfid called with id:', id);
+      const url = ENDPOINTS.RFID_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete RFID';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'RFID deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteRfid error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all vehicles
+   */
+  async getVehicles() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getVehicles called');
+      const response = await this.get(ENDPOINTS.VEHICLE_GET);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch vehicles';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicles fetched';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getVehicles error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add new vehicle
+   */
+  async addVehicle(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addVehicle called with payload:', payload);
+      const response = await this.post(ENDPOINTS.VEHICLE_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update vehicle
+   */
+  async updateVehicle(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateVehicle called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.VEHICLE_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete vehicle
+   */
+  async deleteVehicle(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteVehicle called with id:', id);
+      const url = ENDPOINTS.VEHICLE_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete vehicle';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Vehicle deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteVehicle error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all events
+   */
+  async getEvents() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getEvents called');
+      const response = await this.get(ENDPOINTS.EVENT_GET);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch events';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Events fetched';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getEvents error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add new event with FormData for image upload
+   */
+  async addEvent(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addEvent called with payload:', payload);
+      const response = await this.post(ENDPOINTS.EVENT_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add event';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Event added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addEvent error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update event with FormData for image upload
+   */
+  async updateEvent(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateEvent called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.EVENT_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update event';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Event updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateEvent error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete event
+   */
+  async deleteEvent(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteEvent called with id:', id);
+      const url = ENDPOINTS.EVENT_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete event';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Event deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteEvent error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all academic calendars
+   */
+  async getAcademicCalendars(year = null, month = null) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getAcademicCalendars called with year:', year, 'month:', month);
+      
+      const payload = {};
+      if (year) payload.year = year;
+      if (month) payload.month = month;
+      
+      const response = await this.get(ENDPOINTS.ACADEMIC_CALENDAR_GET, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch academic calendars';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic calendars fetched';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getAcademicCalendars error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add academic calendar
+   */
+  async addAcademicCalendar(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addAcademicCalendar called with payload:', payload);
+      const response = await this.post(ENDPOINTS.ACADEMIC_CALENDAR_ADD, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to add academic calendar';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic calendar added';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addAcademicCalendar error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update academic calendar
+   */
+  async updateAcademicCalendar(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateAcademicCalendar called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.ACADEMIC_CALENDAR_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to update academic calendar';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic calendar updated';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateAcademicCalendar error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete academic calendar
+   */
+  async deleteAcademicCalendar(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteAcademicCalendar called with id:', id);
+      const url = ENDPOINTS.ACADEMIC_CALENDAR_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      // Check if API returned an error (status: false)
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to delete academic calendar';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Academic calendar deleted';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteAcademicCalendar error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get castes
+   */
+  async getCastes() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getCastes called');
+      const response = await this.get(ENDPOINTS.CASTE_GET);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to fetch castes';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      const data = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
+      return { raw: response, data, message: 'Castes fetched' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getCastes error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add caste
+   */
+  async addCaste(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addCaste called with payload:', payload);
+      const response = await this.post(ENDPOINTS.CASTE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to add caste';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Caste added' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addCaste error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update caste
+   */
+  async updateCaste(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateCaste called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.CASTE_UPDATE.replace('{id}', id);
+      const response = await this.post(url, { ...payload, _method: 'POST' });
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to update caste';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Caste updated' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateCaste error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete caste
+   */
+  async deleteCaste(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteCaste called with id:', id);
+      const url = ENDPOINTS.CASTE_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to delete caste';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Caste deleted' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteCaste error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get religions
+   */
+  async getReligions() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getReligions called');
+      const response = await this.get(ENDPOINTS.RELIGION_GET);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to fetch religions';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      const data = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
+      return { raw: response, data, message: 'Religions fetched' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getReligions error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add religion
+   */
+  async addReligion(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addReligion called with payload:', payload);
+      const response = await this.post(ENDPOINTS.RELIGION_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to add religion';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Religion added' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addReligion error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update religion
+   */
+  async updateReligion(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateReligion called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.RELIGION_UPDATE.replace('{id}', id);
+      const response = await this.post(url, { ...payload, _method: 'POST' });
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to update religion';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Religion updated' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateReligion error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete religion
+   */
+  async deleteReligion(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteReligion called with id:', id);
+      const url = ENDPOINTS.RELIGION_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to delete religion';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Religion deleted' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteReligion error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get routes
+   */
+  async getRoutes() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getRoutes called');
+      const response = await this.get(ENDPOINTS.ROUTE_GET);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to fetch routes';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      const data = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
+      return { raw: response, data, message: 'Routes fetched' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getRoutes error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add route
+   */
+  async addRoute(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addRoute called with payload:', payload);
+      const response = await this.post(ENDPOINTS.ROUTE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to add route';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Route added' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addRoute error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update route
+   */
+  async updateRoute(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateRoute called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.ROUTE_UPDATE.replace('{id}', id);
+      const response = await this.post(url, { ...payload, _method: 'POST' });
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to update route';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Route updated' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateRoute error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete route
+   */
+  async deleteRoute(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteRoute called with id:', id);
+      const url = ENDPOINTS.ROUTE_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to delete route';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Route deleted' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteRoute error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get scholarships
+   */
+  async getScholarships() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getScholarships called');
+      const response = await this.get(ENDPOINTS.SCHOLARSHIP_GET);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to fetch scholarships';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      const data = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
+      return { raw: response, data, message: 'Scholarships fetched' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getScholarships error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add scholarship
+   */
+  async addScholarship(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addScholarship called with payload:', payload);
+      const response = await this.post(ENDPOINTS.SCHOLARSHIP_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to add scholarship';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Scholarship added' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addScholarship error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update scholarship
+   */
+  async updateScholarship(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateScholarship called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.SCHOLARSHIP_UPDATE.replace('{id}', id);
+      const response = await this.post(url, { ...payload, _method: 'POST' });
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to update scholarship';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Scholarship updated' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateScholarship error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete scholarship
+   */
+  async deleteScholarship(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteScholarship called with id:', id);
+      const url = ENDPOINTS.SCHOLARSHIP_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? (typeof response.msg === 'string' ? response.msg : Object.values(response.msg).flat().join(', ')) : 'Failed to delete scholarship';
+        throw { status: 400, message: errorMsg, data: response };
+      }
+      
+      return { raw: response, data: response?.data, message: 'Scholarship deleted' };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteScholarship error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

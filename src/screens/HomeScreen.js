@@ -83,7 +83,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship}) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
@@ -149,6 +149,54 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateSection();
       }
       console.log('Navigating to Section');
+    } else if (item.id === '6.10') {
+      // RFID
+      if (onNavigateRfid) {
+        onNavigateRfid();
+      }
+      console.log('Navigating to RFID');
+    } else if (item.id === '6.11') {
+      // Vehicle
+      if (onNavigateVehicle) {
+        onNavigateVehicle();
+      }
+      console.log('Navigating to Vehicle');
+    } else if (item.id === '6.12') {
+      // Event
+      if (onNavigateEvent) {
+        onNavigateEvent();
+      }
+      console.log('Navigating to Event');
+    } else if (item.id === '6.13') {
+      // Academic Calendar
+      if (onNavigateAcademicCalendar) {
+        onNavigateAcademicCalendar();
+      }
+      console.log('Navigating to Academic Calendar');
+    } else if (item.id === '6.14') {
+      // Caste
+      if (onNavigateCaste) {
+        onNavigateCaste();
+      }
+      console.log('Navigating to Caste');
+    } else if (item.id === '6.15') {
+      // Religion
+      if (onNavigateReligion) {
+        onNavigateReligion();
+      }
+      console.log('Navigating to Religion');
+    } else if (item.id === '6.16') {
+      // Route
+      if (onNavigateRoute) {
+        onNavigateRoute();
+      }
+      console.log('Navigating to Route');
+    } else if (item.id === '6.17') {
+      // Scholarship
+      if (onNavigateScholarship) {
+        onNavigateScholarship();
+      }
+      console.log('Navigating to Scholarship');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

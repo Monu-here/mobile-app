@@ -41,8 +41,46 @@ export const ENDPOINTS = {
   SECTION_GET: '/admin/settings/section',
   SECTION_UPDATE: '/admin/settings/section/update/{id}',
   SECTION_DELETE: '/admin/settings/section/delete/{id}',
-  // Dashboard count endpoint
-  DASHBOARD_COUNT: '/admin/settings/count',
+  // RFID endpoints
+  RFID_ADD: '/admin/settings/rfid/add',
+  RFID_GET: '/admin/settings/rfid',
+  RFID_UPDATE: '/admin/settings/rfid/update/{id}',
+  RFID_DELETE: '/admin/settings/rfid/delete/{id}',
+  // Vehicle endpoints
+  VEHICLE_ADD: '/admin/settings/vehicle/add',
+  VEHICLE_GET: '/admin/settings/vehicle',
+  VEHICLE_UPDATE: '/admin/settings/vehicle/update/{id}',
+  VEHICLE_DELETE: '/admin/settings/vehicle/delete/{id}',
+  // Event endpoints
+  EVENT_ADD: '/admin/settings/event/add',
+  EVENT_GET: '/admin/settings/event',
+  EVENT_UPDATE: '/admin/settings/event/update/{id}',
+  EVENT_DELETE: '/admin/settings/event/delete/{id}',
+  // Academic Calendar endpoints
+  ACADEMIC_CALENDAR_ADD: '/admin/settings/academic-calendar/add',
+  ACADEMIC_CALENDAR_GET: '/admin/settings/academic-calendar',
+  ACADEMIC_CALENDAR_UPDATE: '/admin/settings/academic-calendar/update/{id}',
+  ACADEMIC_CALENDAR_DELETE: '/admin/settings/academic-calendar/delete/{id}',
+  // Caste endpoints
+  CASTE_ADD: '/admin/settings/caste/add',
+  CASTE_GET: '/admin/settings/caste',
+  CASTE_UPDATE: '/admin/settings/caste/update/{id}',
+  CASTE_DELETE: '/admin/settings/caste/delete/{id}',
+  // Religion endpoints
+  RELIGION_ADD: '/admin/settings/religion/add',
+  RELIGION_GET: '/admin/settings/religion',
+  RELIGION_UPDATE: '/admin/settings/religion/update/{id}',
+  RELIGION_DELETE: '/admin/settings/religion/delete/{id}',
+  // Route endpoints
+  ROUTE_ADD: '/admin/settings/route/add',
+  ROUTE_GET: '/admin/settings/route',
+  ROUTE_UPDATE: '/admin/settings/route/update/{id}',
+  ROUTE_DELETE: '/admin/settings/route/delete/{id}',
+  // Scholarship endpoints
+  SCHOLARSHIP_ADD: '/admin/settings/scholarship/add',
+  SCHOLARSHIP_GET: '/admin/settings/scholarship',
+  SCHOLARSHIP_UPDATE: '/admin/settings/scholarship/update/{id}',
+  SCHOLARSHIP_DELETE: '/admin/settings/scholarship/delete/{id}',
 };
 
 // HTTP Methods

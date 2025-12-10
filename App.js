@@ -12,6 +12,14 @@ import BranchScreen from './src/screens/BranchScreen';
 import PickupPointScreen from './src/screens/PickupPointScreen';
 import GradeScreen from './src/screens/GradeScreen';
 import SectionScreen from './src/screens/SectionScreen';
+import RFIDScreen from './src/screens/RFIDScreen';
+import VehicleScreen from './src/screens/VehicleScreen';
+import EventScreen from './src/screens/EventScreen';
+import AcademicCalendarScreen from './src/screens/AcademicCalendarScreen';
+import CasteScreen from './src/screens/CasteScreen';
+import ReligionScreen from './src/screens/ReligionScreen';
+import RouteScreen from './src/screens/RouteScreen';
+import ScholarshipScreen from './src/screens/ScholarshipScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -115,6 +123,35 @@ export default function App() {
   const handleNavigateSection = () => {
     setAppState('section');
   }
+  const handleNavigateRfid = () => {
+    setAppState('rfid');
+  }
+  const handleNavigateVehicle = () => {
+    setAppState('vehicle');
+  }
+  const handleNavigateEvent = () => {
+    setAppState('event');
+  }
+
+  const handleNavigateAcademicCalendar = () => {
+    setAppState('academicCalendar');
+  }
+
+  const handleNavigateCaste = () => {
+    setAppState('caste');
+  }
+
+  const handleNavigateReligion = () => {
+    setAppState('religion');
+  }
+
+  const handleNavigateRoute = () => {
+    setAppState('route');
+  }
+
+  const handleNavigateScholarship = () => {
+    setAppState('scholarship');
+  }
 
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
@@ -170,6 +207,14 @@ export default function App() {
           onNavigatePickupPoint={handleNavigatePickupPoint}
           onNavigateGrade={handleNavigateGrade}
           onNavigateSection={handleNavigateSection}
+          onNavigateRfid={handleNavigateRfid}
+          onNavigateVehicle={handleNavigateVehicle}
+          onNavigateEvent={handleNavigateEvent}
+          onNavigateAcademicCalendar={handleNavigateAcademicCalendar}
+          onNavigateCaste={handleNavigateCaste}
+          onNavigateReligion={handleNavigateReligion}
+          onNavigateRoute={handleNavigateRoute}
+          onNavigateScholarship={handleNavigateScholarship}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -180,6 +225,14 @@ export default function App() {
     {appState === 'pickupPoint' && <PickupPointScreen onBack={() => setAppState('home')} />}
     {appState === 'grade' && <GradeScreen onBack={() => setAppState('home')} />}
     {appState === 'section' && <SectionScreen onBack={() => setAppState('home')} />}
+      {appState === 'rfid' && <RFIDScreen onBack={() => setAppState('home')} />}
+      {appState === 'vehicle' && <VehicleScreen onBack={() => setAppState('home')} />}
+      {appState === 'event' && <EventScreen onBack={() => setAppState('home')} />}
+      {appState === 'academicCalendar' && <AcademicCalendarScreen onBack={() => setAppState('home')} />}
+      {appState === 'caste' && <CasteScreen onBack={() => setAppState('home')} />}
+      {appState === 'religion' && <ReligionScreen onBack={() => setAppState('home')} />}
+      {appState === 'route' && <RouteScreen onBack={() => setAppState('home')} />}
+      {appState === 'scholarship' && <ScholarshipScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>
