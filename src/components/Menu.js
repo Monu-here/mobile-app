@@ -95,6 +95,36 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '🚌',
         },
         {
+          id: '6.12',
+          title: 'Event',
+          icon: '🎉',
+        },
+        {
+          id: '6.13',
+          title: 'Academic Calendar',
+          icon: '📅',
+        },
+        {
+          id: '6.14',
+          title: 'Caste',
+          icon: '👥',
+        },
+        {
+          id: '6.15',
+          title: 'Religion',
+          icon: '🙏',
+        },
+        {
+          id: '6.16',
+          title: 'Route',
+          icon: '🛣️',
+        },
+        {
+          id: '6.17',
+          title: 'Scholarship',
+          icon: '🎓',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',
