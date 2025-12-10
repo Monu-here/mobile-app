@@ -7,6 +7,25 @@ class ApiService {
   }
 
   /**
+   * Get dashboard count data
+   */
+  async getDashboardCount() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getDashboardCount called');
+      const response = await this.get(ENDPOINTS.DASHBOARD_COUNT);
+      const raw = response;
+      const data = response?.data || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getDashboardCount error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Get current school settings
    */
   async getSchoolSettings() {

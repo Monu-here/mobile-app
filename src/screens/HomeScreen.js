@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
+import { BarChart } from 'react-native-chart-kit';
 import Menu from '../components/Menu';
+import apiService from '../api/apiService';
 
 // Helper to map role id to readable label
 function getRoleLabel(role) {
@@ -81,6 +85,27 @@ function renderRoleSpecific(user) {
 
 export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle}) {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [userMenuVisible, setUserMenuVisible] = useState(false);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loadingDashboard, setLoadingDashboard] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoadingDashboard(true);
+      const res = await apiService.getDashboardCount();
+      console.log('[HomeScreen] Dashboard data:', res);
+      setDashboardData(res?.data || null);
+    } catch (err) {
+      console.error('[HomeScreen] Error fetching dashboard:', err);
+      setDashboardData(null);
+    } finally {
+      setLoadingDashboard(false);
+    }
+  };
 
   const handleMenuItemPress = (item) => {
     console.log('Menu item pressed:', item.title);
@@ -173,32 +198,111 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
           <TouchableOpacity style={styles.menuButton} onPress={() => setMenuVisible(true)}>
             <Text style={styles.menuButtonText}>☰</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.profileButton} onPress={onNavigateProfile}>
-            <Text style={styles.profileIcon}>👤</Text>
-          </TouchableOpacity>
         </View>
 
         {/* Quick Stats */}
         <View style={styles.statsContainer}>
-          <View style={[styles.statCard, { backgroundColor: '#E8E4F8' }]}>
-            <Text style={styles.statIcon}>📊</Text>
-            <Text style={styles.statLabel}>Classes</Text>
-            <Text style={styles.statValue}>12</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: '#E0F7F4' }]}>
-            <Text style={styles.statIcon}>👥</Text>
-            <Text style={styles.statLabel}>Students</Text>
-            <Text style={styles.statValue}>485</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: '#FFE8E8' }]}>
-            <Text style={styles.statIcon}>✓</Text>
-            <Text style={styles.statLabel}>Attendance</Text>
-            <Text style={styles.statValue}>94%</Text>
-          </View>
+          {loadingDashboard ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#6C63FF" />
+            </View>
+          ) : (
+            <>
+              <View style={[styles.statCard, { backgroundColor: '#E0F7F4' }]}>
+                <Text style={styles.statIcon}>👥</Text>
+                <Text style={styles.statLabel}>Students</Text>
+                <Text style={styles.statValue}>{dashboardData?.totalStudent || 0}</Text>
+              </View>
+              <View style={[styles.statCard, { backgroundColor: '#E8E4F8' }]}>
+                <Text style={styles.statIcon}>👥</Text>
+                <Text style={styles.statLabel}>Teachers</Text>
+                <Text style={styles.statValue}>{dashboardData?.totalStaffTeacher || 0}</Text>
+              </View>
+              <View style={[styles.statCard, { backgroundColor: '#FFE8E8' }]}>
+                <Text style={styles.statIcon}>📚</Text>
+                <Text style={styles.statLabel}>Subjects</Text>
+                <Text style={styles.statValue}>{dashboardData?.totalSubjects || 0}</Text>
+              </View>
+            </>
+          )}
         </View>
+
+        {/* Additional Statistics */}
+        {!loadingDashboard && (
+          <View style={styles.additionalStatsContainer}>
+            <Text style={styles.sectionTitle}>Detailed Statistics</Text>
+            <View style={styles.statsGrid}>
+              <View style={[styles.statCardSmall, { backgroundColor: '#D4EDDA' }]}>
+                <Text style={styles.statSmallIcon}>🎓</Text>
+                <Text style={styles.statSmallLabel}>Pass Out Students</Text>
+                <Text style={styles.statSmallValue}>{dashboardData?.totalPassOutStudent || 0}</Text>
+              </View>
+              <View style={[styles.statCardSmall, { backgroundColor: '#D1ECF1' }]}>
+                <Text style={styles.statSmallIcon}>👨‍💼</Text>
+                <Text style={styles.statSmallLabel}>Staff</Text>
+                <Text style={styles.statSmallValue}>{dashboardData?.totalStaff || 0}</Text>
+              </View>
+              
+            </View>
+          </View>
+        )}
+
+        {/* Attendance Chart */}
+        {!loadingDashboard && dashboardData?.todayAttendance && (
+          <View style={styles.attendanceChartContainer}>
+            <Text style={styles.sectionTitle}>📊 Today's Attendance</Text>
+            <View style={styles.chartWrapper}>
+              {Array.isArray(dashboardData.todayAttendance) && dashboardData.todayAttendance.length > 0 ? (
+                <BarChart
+                  data={{
+                    labels: dashboardData.todayAttendance.slice(0, 7).map((item, idx) => `G${idx + 1}`),
+                    datasets: [
+                      {
+                        data: dashboardData.todayAttendance.slice(0, 7).map((item) => {
+                          // Extract percentage or count
+                          const attendance = typeof item === 'number' ? item : item?.percentage || item?.count || 0;
+                          return Math.min(attendance, 100);
+                        }),
+                        color: () => '#6C63FF',
+                        strokeWidth: 2,
+                      },
+                    ],
+                  }}
+                  width={Dimensions.get('window').width - 48}
+                  height={250}
+                  yAxisLabel=""
+                  yAxisSuffix="%"
+                  chartConfig={{
+                    backgroundColor: '#FFF',
+                    backgroundGradientFrom: '#FFF',
+                    backgroundGradientTo: '#FFF',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => `rgba(108, 99, 255, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    style: {
+                      borderRadius: 16,
+                    },
+                    propsForDots: {
+                      r: '5',
+                      strokeWidth: '2',
+                      stroke: '#6C63FF',
+                    },
+                  }}
+                  verticalLabelRotation={0}
+                  style={{
+                    marginVertical: 8,
+                    borderRadius: 16,
+                    paddingRight: 0,
+                  }}
+                />
+              ) : (
+                <View style={styles.noDataContainer}>
+                  <Text style={styles.noDataText}>No attendance data available</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
 
         {/* Recent Activity */}
         <View style={styles.sectionContainer}>
@@ -230,12 +334,41 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         </View>
       </ScrollView>
 
-      {/* Menu Modal */}
-      <Menu
-        visible={menuVisible}
-        onClose={() => setMenuVisible(false)}
-        onMenuItemPress={handleMenuItemPress}
-      />
+      {/* User Menu at Bottom */}
+      <View style={styles.bottomUserContainer}>
+        <View style={styles.userMenuWrapper}>
+          {userMenuVisible && (
+            <View style={styles.userSubmenu}>
+              <TouchableOpacity 
+                style={styles.userMenuItemProfile}
+                onPress={() => {
+                  onNavigateProfile();
+                  setUserMenuVisible(false);
+                }}
+              >
+                <Text style={styles.userSubmenuIcon}>👤</Text>
+                <Text style={styles.userSubmenuText}>Profile</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.userMenuItemLogout}
+                onPress={() => {
+                  onLogout();
+                  setUserMenuVisible(false);
+                }}
+              >
+                <Text style={styles.userSubmenuIcon}>🚪</Text>
+                <Text style={styles.userSubmenuText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <TouchableOpacity 
+          style={styles.userButton}
+          onPress={() => setUserMenuVisible(!userMenuVisible)}
+        >
+          <Text style={styles.userButtonIcon}>👤</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -293,10 +426,77 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '700',
   },
+  bottomUserContainer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    alignItems: 'flex-end',
+    zIndex: 100,
+  },
+  userMenuWrapper: {
+    position: 'relative',
+    marginBottom: 12,
+  },
+  userSubmenu: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 5,
+    minWidth: 140,
+  },
+  userMenuItemProfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  userMenuItemLogout: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+  },
+  userSubmenuIcon: {
+    fontSize: 18,
+    marginRight: 10,
+  },
+  userSubmenuText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+  },
+  userButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#6C63FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  userButtonIcon: {
+    fontSize: 24,
+  },
   statsContainer: {
     flexDirection: 'row',
     gap: 12,
     marginBottom: 28,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 120,
   },
   statCard: {
     flex: 1,
@@ -394,15 +594,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '400',
   },
-  profileButton: {
-    marginLeft: 8,
-    backgroundColor: '#EEE',
-    padding: 8,
-    borderRadius: 20,
-  },
-  profileIcon: {
-    fontSize: 18,
-  },
   roleBox: {
     backgroundColor: '#FFF',
     borderRadius: 12,
@@ -428,5 +619,65 @@ const styles = StyleSheet.create({
   roleText: {
     fontSize: 12,
     color: '#666',
+  },
+  additionalStatsContainer: {
+    marginBottom: 28,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'space-between',
+  },
+  statCardSmall: {
+    width: '48%',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statSmallIcon: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  statSmallLabel: {
+    fontSize: 10,
+    color: '#666',
+    fontWeight: '600',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  statSmallValue: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  attendanceChartContainer: {
+    marginBottom: 28,
+  },
+  chartWrapper: {
+    backgroundColor: '#FFF',
+    borderRadius: 14,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  noDataContainer: {
+    paddingVertical: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataText: {
+    fontSize: 14,
+    color: '#999',
+    fontWeight: '500',
   },
 });
