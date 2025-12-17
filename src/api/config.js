@@ -81,6 +81,11 @@ export const ENDPOINTS = {
   SCHOLARSHIP_GET: '/admin/settings/scholarship',
   SCHOLARSHIP_UPDATE: '/admin/settings/scholarship/update/{id}',
   SCHOLARSHIP_DELETE: '/admin/settings/scholarship/delete/{id}',
+  // Subject endpoints
+  SUBJECT_ADD: '/admin/settings/subject/add',
+  SUBJECT_GET: '/admin/settings/subject',
+  SUBJECT_UPDATE: '/admin/settings/subject/update/{id}',
+  SUBJECT_DELETE: '/admin/settings/subject/delete/{id}',
 };
 
 // HTTP Methods
