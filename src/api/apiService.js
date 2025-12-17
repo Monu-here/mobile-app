@@ -1533,6 +1533,86 @@ class ApiService {
   }
 
   /**
+   * Get notices with optional filters
+   * @param {Object} filters { grade_id, section_id, for, published_at }
+   */
+  async getNotices(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getNotices called with filters:', filters);
+      const response = await this.post(ENDPOINTS.NOTICE_GET, filters);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getNotices error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new notice
+   * @param {Object} payload { title, desc, published_at, grade_id, section_id, for }
+   */
+  async addNotice(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addNotice called with payload:', payload);
+      const response = await this.post(ENDPOINTS.NOTICE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a notice
+   * @param {number} id - Notice ID
+   * @param {Object} payload { title, desc, published_at, grade_id, section_id, for }
+   */
+  async updateNotice(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateNotice called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.NOTICE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, { ...payload, _method: 'POST' });
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a notice
+   * @param {number} id - Notice ID
+   */
+  async deleteNotice(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteNotice called with id:', id);
+      const endpoint = ENDPOINTS.NOTICE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

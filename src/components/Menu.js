@@ -130,6 +130,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '🎓',
         },
         {
+          id: '6.19',
+          title: 'Notice',
+          icon: '📢',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

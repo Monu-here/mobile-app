@@ -86,6 +86,11 @@ export const ENDPOINTS = {
   SUBJECT_GET: '/admin/settings/subject',
   SUBJECT_UPDATE: '/admin/settings/subject/update/{id}',
   SUBJECT_DELETE: '/admin/settings/subject/delete/{id}',
+  // Notice endpoints
+  NOTICE_ADD: '/admin/settings/notice/add',
+  NOTICE_GET: '/admin/settings/notice',
+  NOTICE_UPDATE: '/admin/settings/notice/update/{id}',
+  NOTICE_DELETE: '/admin/settings/notice/delete/{id}',
 };
 
 // HTTP Methods

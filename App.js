@@ -21,6 +21,7 @@ import ReligionScreen from './src/screens/ReligionScreen';
 import RouteScreen from './src/screens/RouteScreen';
 import ScholarshipScreen from './src/screens/ScholarshipScreen';
 import SubjectScreen from './src/screens/SubjectScreen';
+import NoticeScreen from './src/screens/NoticeScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -158,6 +159,10 @@ export default function App() {
     setAppState('subject');
   }
 
+  const handleNavigateNotice = () => {
+    setAppState('notice');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -221,6 +226,7 @@ export default function App() {
           onNavigateRoute={handleNavigateRoute}
           onNavigateScholarship={handleNavigateScholarship}
           onNavigateSubject={handleNavigateSubject}
+          onNavigateNotice={handleNavigateNotice}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -240,6 +246,7 @@ export default function App() {
       {appState === 'route' && <RouteScreen onBack={() => setAppState('home')} />}
       {appState === 'scholarship' && <ScholarshipScreen onBack={() => setAppState('home')} />}
       {appState === 'subject' && <SubjectScreen onBack={() => setAppState('home')} />}
+      {appState === 'notice' && <NoticeScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>
