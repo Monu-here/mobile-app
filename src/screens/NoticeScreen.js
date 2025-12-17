@@ -42,9 +42,11 @@ export default function NoticeScreen({ onBack }) {
 
   // For types: 1 = Students, 2 = Parents, 3 = Teachers, etc.
   const forTypes = [
-    { id: 1, name: 'Students' },
-    { id: 2, name: 'Parents' },
-    { id: 3, name: 'Teachers' },
+    { id: 5, name: 'All' },
+    { id: 1, name: 'Admin' },
+    { id: 2, name: 'Teachers' },
+    { id: 3, name: 'Students' },
+    { id: 4, name: 'Parents' },
   ];
 
   useEffect(() => {
