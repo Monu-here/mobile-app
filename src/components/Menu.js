@@ -85,6 +85,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '📂',
         },
         {
+          id: '6.18',
+          title: 'Subject',
+          icon: '📝',
+        },
+        {
           id: '6.10',
           title: 'RFID',
           icon: '📡',

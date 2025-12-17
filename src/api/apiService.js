@@ -1473,6 +1473,85 @@ class ApiService {
   }
 
   /**
+   * Get subjects list with optional filters
+   */
+  async getSubjects(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSubjects called with filters:', filters);
+      const response = await this.post(ENDPOINTS.SUBJECT_GET, filters);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSubjects error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new subject
+   * @param {Object} payload { name, code, subject_credit_hours, subject_type, grade_id, section_id }
+   */
+  async addSubject(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addSubject called with payload:', payload);
+      const response = await this.post(ENDPOINTS.SUBJECT_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addSubject error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a subject
+   * @param {number} id - Subject ID
+   * @param {Object} payload { name, code, subject_credit_hours, subject_type, grade_id, section_id }
+   */
+  async updateSubject(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSubject called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.SUBJECT_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, { ...payload, _method: 'POST' });
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateSubject error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a subject
+   * @param {number} id - Subject ID
+   */
+  async deleteSubject(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteSubject called with id:', id);
+      const endpoint = ENDPOINTS.SUBJECT_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteSubject error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {
