@@ -79,7 +79,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice}) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleMenuItemPress = (item) => {
@@ -178,6 +178,12 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateSubject();
       }
       console.log('Navigating to Subject');
+    } else if (item.id === '6.19') {
+      // Notice
+      if (onNavigateNotice) {
+        onNavigateNotice();
+      }
+      console.log('Navigating to Notice');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');
