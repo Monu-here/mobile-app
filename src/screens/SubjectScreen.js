@@ -32,6 +32,13 @@ export default function SubjectScreen({ onBack }) {
   const [error, setError] = useState(null);
   const [showGradePicker, setShowGradePicker] = useState(false);
   const [showSectionPicker, setShowSectionPicker] = useState(false);
+  const [showSubjectTypePicker, setShowSubjectTypePicker] = useState(false);
+
+  // Subject types: 1 = Theory, 2 = Practical
+  const subjectTypes = [
+    { id: 1, name: 'Theory' },
+    { id: 2, name: 'Practical' },
+  ];
 
   useEffect(() => {
     fetchData();
@@ -52,7 +59,9 @@ export default function SubjectScreen({ onBack }) {
       } else if (gradeMaybe?.data && Array.isArray(gradeMaybe.data)) {
         gradeList = gradeMaybe.data;
       }
-      setGrades(Array.isArray(gradeList) ? gradeList : []);
+      const finalGrades = Array.isArray(gradeList) ? gradeList : [];
+      console.log('[SubjectScreen] Fetched grades:', finalGrades);
+      setGrades(finalGrades);
 
       // Fetch sections
       const sectionRes = await apiService.getSections();
@@ -65,11 +74,14 @@ export default function SubjectScreen({ onBack }) {
       } else if (sectionMaybe?.data && Array.isArray(sectionMaybe.data)) {
         sectionList = sectionMaybe.data;
       }
-      setSections(Array.isArray(sectionList) ? sectionList : []);
+      const finalSections = Array.isArray(sectionList) ? sectionList : [];
+      console.log('[SubjectScreen] Fetched sections:', finalSections);
+      setSections(finalSections);
 
       // Fetch subjects
       const result = await apiService.getSubjects();
       const data = Array.isArray(result.data) ? result.data : [];
+      console.log('[SubjectScreen] Fetched subjects:', data);
       setSubjects(data);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -100,7 +112,13 @@ export default function SubjectScreen({ onBack }) {
     return section?.name || 'Unknown Section';
   };
 
+  const getSubjectTypeName = (id) => {
+    const type = subjectTypes.find(t => t.id === parseInt(id, 10));
+    return type?.name || 'Unknown Type';
+  };
+
   const handleAdd = async () => {
+    // Validation
     if (!name.trim()) {
       showToast('Please enter subject name', 'error');
       return;
@@ -112,24 +130,38 @@ export default function SubjectScreen({ onBack }) {
 
     Keyboard.dismiss();
     setSubmitting(true);
+    setError(null); // Clear any previous errors
 
     try {
+      // Build payload with proper field validation
       const payload = {
         name: name.trim(),
         code: code.trim() || '',
         subject_credit_hours: creditHours.trim() || '',
-        subject_type: subjectType.trim() || '',
-        grade_id: gradeId,
-        section_id: sectionId || '',
+        subject_type: subjectType ? parseInt(subjectType, 10) : '',
+        grade_id: parseInt(gradeId, 10),
+        section_id: sectionId ? parseInt(sectionId, 10) : '',
       };
+
+      console.log('[SubjectScreen] Field values:');
+      console.log('  name:', name, '-> trim:', name.trim());
+      console.log('  code:', code, '-> trim:', code.trim());
+      console.log('  creditHours:', creditHours, '-> trim:', creditHours.trim());
+      console.log('  subjectType:', subjectType);
+      console.log('  gradeId:', gradeId);
+      console.log('  sectionId:', sectionId);
+      
+      console.log('[SubjectScreen] Final payload:', JSON.stringify(payload, null, 2));
 
       if (editingId) {
         // Update
-        await apiService.updateSubject(editingId, payload);
+        const response = await apiService.updateSubject(editingId, payload);
+        console.log('[SubjectScreen] Update response:', response);
         showToast('Subject updated successfully', 'success');
       } else {
         // Add
-        await apiService.addSubject(payload);
+        const response = await apiService.addSubject(payload);
+        console.log('[SubjectScreen] Add response:', response);
         showToast('Subject added successfully', 'success');
       }
 
@@ -139,6 +171,7 @@ export default function SubjectScreen({ onBack }) {
       }, 500);
     } catch (err) {
       console.error('Error saving subject:', err);
+      console.error('Full error object:', JSON.stringify(err, null, 2));
       console.error('Error details:', {
         message: err.message,
         response: err.response,
@@ -147,14 +180,21 @@ export default function SubjectScreen({ onBack }) {
       });
       
       let errorMessage = 'Failed to save subject';
+      
+      // Try multiple error message sources
       if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.response?.data?.error) {
         errorMessage = err.response.data.error;
+      } else if (err.data?.message) {
+        errorMessage = err.data.message;
+      } else if (err.data?.error) {
+        errorMessage = err.data.error;
       } else if (err.message) {
         errorMessage = err.message;
       }
       
+      console.log('[SubjectScreen] Final error message:', errorMessage);
       showToast(errorMessage, 'error');
       setError(errorMessage);
     } finally {
@@ -166,7 +206,7 @@ export default function SubjectScreen({ onBack }) {
     setName(item.name || '');
     setCode(item.code || '');
     setCreditHours(item.subject_credit_hours?.toString() || '');
-    setSubjectType(item.subject_type || '');
+    setSubjectType(item.subject_type?.toString() || '');
     setGradeId(item.grade_id?.toString() || '');
     setSectionId(item.section_id?.toString() || '');
     setEditingId(item.id);
@@ -295,13 +335,16 @@ export default function SubjectScreen({ onBack }) {
           />
 
           <Text style={styles.formLabel}>Subject Type</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter subject type"
-            value={subjectType}
-            onChangeText={setSubjectType}
-            editable={!submitting}
-          />
+          <TouchableOpacity 
+            style={styles.pickerButton}
+            onPress={() => setShowSubjectTypePicker(true)}
+            disabled={submitting}
+          >
+            <Text style={styles.pickerButtonText}>
+              {subjectType ? getSubjectTypeName(parseInt(subjectType, 10)) : '-- Select Subject Type --'}
+            </Text>
+            <Text style={styles.pickerButtonArrow}>▼</Text>
+          </TouchableOpacity>
 
           <Text style={styles.formLabel}>Grade *</Text>
           <TouchableOpacity 
@@ -428,6 +471,51 @@ export default function SubjectScreen({ onBack }) {
                     sectionId === String(section.id) && styles.modalItemTextSelected
                   ]}>
                     {section.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Subject Type Picker Modal */}
+      <Modal visible={showSubjectTypePicker} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Subject Type</Text>
+              <TouchableOpacity onPress={() => setShowSubjectTypePicker(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalList}>
+              <TouchableOpacity 
+                style={styles.modalItem}
+                onPress={() => {
+                  setSubjectType('');
+                  setShowSubjectTypePicker(false);
+                }}
+              >
+                <Text style={styles.modalItemText}>-- Clear Selection --</Text>
+              </TouchableOpacity>
+              {subjectTypes.map((type) => (
+                <TouchableOpacity
+                  key={type.id}
+                  style={[
+                    styles.modalItem,
+                    subjectType === String(type.id) && styles.modalItemSelected
+                  ]}
+                  onPress={() => {
+                    setSubjectType(String(type.id));
+                    setShowSubjectTypePicker(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.modalItemText,
+                    subjectType === String(type.id) && styles.modalItemTextSelected
+                  ]}>
+                    {type.name}
                   </Text>
                 </TouchableOpacity>
               ))}
