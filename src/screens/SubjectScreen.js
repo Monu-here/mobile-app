@@ -34,6 +34,12 @@ export default function SubjectScreen({ onBack }) {
   const [showSectionPicker, setShowSectionPicker] = useState(false);
   const [showSubjectTypePicker, setShowSubjectTypePicker] = useState(false);
 
+  // Filter states for subject listing
+  const [filterGradeId, setFilterGradeId] = useState('');
+  const [filterSubjectType, setFilterSubjectType] = useState('');
+  const [showFilterGradePicker, setShowFilterGradePicker] = useState(false);
+  const [showFilterSubjectTypePicker, setShowFilterSubjectTypePicker] = useState(false);
+
   // Subject types: 1 = Theory, 2 = Practical
   const subjectTypes = [
     { id: 1, name: 'Theory' },
@@ -43,6 +49,16 @@ export default function SubjectScreen({ onBack }) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Refetch subjects when filters change
+  useEffect(() => {
+    if (filterGradeId || filterSubjectType) {
+      fetchSubjectsWithFilters();
+    } else {
+      // When filters are cleared, fetch all subjects
+      fetchSubjectsWithFilters();
+    }
+  }, [filterGradeId, filterSubjectType]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -78,17 +94,36 @@ export default function SubjectScreen({ onBack }) {
       console.log('[SubjectScreen] Fetched sections:', finalSections);
       setSections(finalSections);
 
-      // Fetch subjects
-      const result = await apiService.getSubjects();
-      const data = Array.isArray(result.data) ? result.data : [];
-      console.log('[SubjectScreen] Fetched subjects:', data);
-      setSubjects(data);
+      // Fetch subjects without filters
+      await fetchSubjectsWithFilters();
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Failed to load data');
       showToast('Failed to load data', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSubjectsWithFilters = async () => {
+    try {
+      const filters = {};
+      if (filterGradeId) {
+        filters.grade_id = parseInt(filterGradeId, 10);
+      }
+      if (filterSubjectType) {
+        filters.subject_type = parseInt(filterSubjectType, 10);
+      }
+
+      console.log('[SubjectScreen] Fetching subjects with filters:', filters);
+      const result = await apiService.getSubjects(filters);
+      const data = Array.isArray(result.data) ? result.data : [];
+      console.log('[SubjectScreen] Fetched subjects:', data);
+      setSubjects(data);
+    } catch (err) {
+      console.error('Error fetching subjects:', err);
+      setError('Failed to load subjects');
+      showToast('Failed to load subjects', 'error');
     }
   };
 
@@ -524,8 +559,159 @@ export default function SubjectScreen({ onBack }) {
         </View>
       </Modal>
 
+      {/* Filter Grade Picker Modal (for listing) */}
+      <Modal visible={showFilterGradePicker} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filter by Grade</Text>
+              <TouchableOpacity onPress={() => setShowFilterGradePicker(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalList}>
+              <TouchableOpacity 
+                style={[
+                  styles.modalItem,
+                  filterGradeId === '' && styles.modalItemSelected
+                ]}
+                onPress={() => {
+                  setFilterGradeId('');
+                  setShowFilterGradePicker(false);
+                }}
+              >
+                <Text style={[
+                  styles.modalItemText,
+                  filterGradeId === '' && styles.modalItemTextSelected
+                ]}>
+                  All Grades
+                </Text>
+              </TouchableOpacity>
+              {grades.map((grade) => (
+                <TouchableOpacity
+                  key={grade.id}
+                  style={[
+                    styles.modalItem,
+                    filterGradeId === String(grade.id) && styles.modalItemSelected
+                  ]}
+                  onPress={() => {
+                    setFilterGradeId(String(grade.id));
+                    setShowFilterGradePicker(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.modalItemText,
+                    filterGradeId === String(grade.id) && styles.modalItemTextSelected
+                  ]}>
+                    {grade.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Filter Subject Type Picker Modal (for listing) */}
+      <Modal visible={showFilterSubjectTypePicker} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filter by Subject Type</Text>
+              <TouchableOpacity onPress={() => setShowFilterSubjectTypePicker(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalList}>
+              <TouchableOpacity 
+                style={[
+                  styles.modalItem,
+                  filterSubjectType === '' && styles.modalItemSelected
+                ]}
+                onPress={() => {
+                  setFilterSubjectType('');
+                  setShowFilterSubjectTypePicker(false);
+                }}
+              >
+                <Text style={[
+                  styles.modalItemText,
+                  filterSubjectType === '' && styles.modalItemTextSelected
+                ]}>
+                  All Types
+                </Text>
+              </TouchableOpacity>
+              {subjectTypes.map((type) => (
+                <TouchableOpacity
+                  key={type.id}
+                  style={[
+                    styles.modalItem,
+                    filterSubjectType === String(type.id) && styles.modalItemSelected
+                  ]}
+                  onPress={() => {
+                    setFilterSubjectType(String(type.id));
+                    setShowFilterSubjectTypePicker(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.modalItemText,
+                    filterSubjectType === String(type.id) && styles.modalItemTextSelected
+                  ]}>
+                    {type.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.listHeader}>
         <Text style={styles.listTitle}>Subjects List ({subjects.length})</Text>
+      </View>
+
+      {/* Filter UI always visible */}
+      <View style={styles.filterContainer}>
+        <TouchableOpacity 
+          style={[
+            styles.filterButton,
+            filterGradeId && styles.filterButtonActive
+          ]}
+          onPress={() => setShowFilterGradePicker(true)}
+        >
+          <Text style={[
+            styles.filterButtonText,
+            filterGradeId && styles.filterButtonTextActive
+          ]}>
+            Grade: {filterGradeId ? getGradeName(parseInt(filterGradeId, 10)) : 'All'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[
+            styles.filterButton,
+            filterSubjectType && styles.filterButtonActive
+          ]}
+          onPress={() => setShowFilterSubjectTypePicker(true)}
+        >
+          <Text style={[
+            styles.filterButtonText,
+            filterSubjectType && styles.filterButtonTextActive
+          ]}>
+            Type: {filterSubjectType ? getSubjectTypeName(parseInt(filterSubjectType, 10)) : 'All'}
+          </Text>
+        </TouchableOpacity>
+
+        {(filterGradeId || filterSubjectType) && (
+          <TouchableOpacity 
+            style={styles.clearFilterButton}
+            onPress={() => {
+              setFilterGradeId('');
+              setFilterSubjectType('');
+            }}
+          >
+            <Text style={styles.clearFilterText}>Clear Filters</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {loading ? (
@@ -834,5 +1020,50 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,
+  },
+  // Filter styles
+  filterContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: '#FFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    flexWrap: 'wrap',
+  },
+  filterButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: '#F0F3FF',
+    borderWidth: 1,
+    borderColor: '#D0D8FF',
+  },
+  filterButtonActive: {
+    backgroundColor: '#E0E8FF',
+    borderColor: '#6C63FF',
+  },
+  filterButtonText: {
+    fontSize: 12,
+    color: '#6C63FF',
+    fontWeight: '500',
+  },
+  filterButtonTextActive: {
+    color: '#4A47A3',
+    fontWeight: '600',
+  },
+  clearFilterButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: '#FFE5E5',
+    borderWidth: 1,
+    borderColor: '#FFB3B3',
+  },
+  clearFilterText: {
+    fontSize: 12,
+    color: '#C92A2A',
+    fontWeight: '600',
   },
 });
