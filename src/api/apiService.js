@@ -1692,6 +1692,72 @@ class ApiService {
     }
   }
 
+  // ============================================================================
+  // Student Category Methods
+  // ============================================================================
+
+  async getStudentCategories(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getStudentCategories called with filters:', filters);
+      const response = await this.get(ENDPOINTS.STUDENT_CATEGORY_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getStudentCategories error:', error);
+      throw error;
+    }
+  }
+
+  async addStudentCategory(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addStudentCategory called with payload:', payload);
+      const response = await this.post(ENDPOINTS.STUDENT_CATEGORY_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addStudentCategory error:', error);
+      throw error;
+    }
+  }
+
+  async updateStudentCategory(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateStudentCategory called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.STUDENT_CATEGORY_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateStudentCategory error:', error);
+      throw error;
+    }
+  }
+
+  async deleteStudentCategory(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteStudentCategory called with id:', id);
+      const endpoint = ENDPOINTS.STUDENT_CATEGORY_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteStudentCategory error:', error);
+      throw error;
+    }
+  }
+
   /**
    * Set authentication token
    */
