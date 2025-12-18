@@ -130,6 +130,41 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '🎓',
         },
         {
+          id: '6.19',
+          title: 'Notice',
+          icon: '📢',
+        },
+        {
+          id: '6.20',
+          title: 'Schedule',
+          icon: '📅',
+        },
+        {
+          id: '6.21',
+          title: 'Student Category',
+          icon: '👥',
+        },
+        {
+          id: '6.22',
+          title: 'Post',
+          icon: '💼',
+        },
+        {
+          id: '6.23',
+          title: 'Route Pickup Point',
+          icon: '🛣️📍',
+        },
+        {
+          id: '6.24',
+          title: 'Leave Type',
+          icon: '📋',
+        },
+        {
+          id: '6.25',
+          title: 'Permission',
+          icon: '🔐',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

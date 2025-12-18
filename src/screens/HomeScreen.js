@@ -83,7 +83,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission}) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
@@ -203,6 +203,48 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateSubject();
       }
       console.log('Navigating to Subject');
+    } else if (item.id === '6.19') {
+      // Notice
+      if (onNavigateNotice) {
+        onNavigateNotice();
+      }
+      console.log('Navigating to Notice');
+    } else if (item.id === '6.20') {
+      // Schedule
+      if (onNavigateSchedule) {
+        onNavigateSchedule();
+      }
+      console.log('Navigating to Schedule');
+    } else if (item.id === '6.21') {
+      // Student Category
+      if (onNavigateStudentCategory) {
+        onNavigateStudentCategory();
+      }
+      console.log('Navigating to Student Category');
+    } else if (item.id === '6.22') {
+      // Post
+      if (onNavigatePost) {
+        onNavigatePost();
+      }
+      console.log('Navigating to Post');
+    } else if (item.id === '6.23') {
+      // Route Pickup Point
+      if (onNavigateRoutePickupPoint) {
+        onNavigateRoutePickupPoint();
+      }
+      console.log('Navigating to Route Pickup Point');
+    } else if (item.id === '6.24') {
+      // Leave Type
+      if (onNavigateLeaveType) {
+        onNavigateLeaveType();
+      }
+      console.log('Navigating to Leave Type');
+    } else if (item.id === '6.25') {
+      // Permission
+      if (onNavigatePermission) {
+        onNavigatePermission();
+      }
+      console.log('Navigating to Permission');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

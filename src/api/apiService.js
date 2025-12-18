@@ -1552,6 +1552,479 @@ class ApiService {
   }
 
   /**
+   * Get notices with optional filters
+   * @param {Object} filters { grade_id, section_id, for, published_at }
+   */
+  async getNotices(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getNotices called with filters:', filters);
+      const response = await this.post(ENDPOINTS.NOTICE_GET, filters);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getNotices error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new notice
+   * @param {Object} payload { title, desc, published_at, grade_id, section_id, for }
+   */
+  async addNotice(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addNotice called with payload:', payload);
+      const response = await this.post(ENDPOINTS.NOTICE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a notice
+   * @param {number} id - Notice ID
+   * @param {Object} payload { title, desc, published_at, grade_id, section_id, for }
+   */
+  async updateNotice(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateNotice called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.NOTICE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, { ...payload, _method: 'POST' });
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a notice
+   * @param {number} id - Notice ID
+   */
+  async deleteNotice(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteNotice called with id:', id);
+      const endpoint = ENDPOINTS.NOTICE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteNotice error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get schedules with optional filters
+   * @param {Object} filters { academic_year_id, grade_id, staff_id, start_time, end_time }
+   */
+  async getSchedules(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSchedules called with filters:', filters);
+      const response = await this.post(ENDPOINTS.SCHEDULE_GET, filters);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSchedules error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new schedule
+   * @param {Object} payload { grade_id, section_id, staff_id, subject_id, day, start_time, end_time, academic_year_id }
+   */
+  async addSchedule(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addSchedule called with payload:', payload);
+      const response = await this.post(ENDPOINTS.SCHEDULE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a schedule
+   * @param {number} id - Schedule ID
+   * @param {Object} payload { grade_id, section_id, staff_id, subject_id, day, start_time, end_time, academic_year_id }
+   */
+  async updateSchedule(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSchedule called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.SCHEDULE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, { ...payload, _method: 'POST' });
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a schedule
+   * @param {number} id - Schedule ID
+   */
+  async deleteSchedule(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteSchedule called with id:', id);
+      const endpoint = ENDPOINTS.SCHEDULE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteSchedule error:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // Student Category Methods
+  // ============================================================================
+
+  async getStudentCategories(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getStudentCategories called with filters:', filters);
+      const response = await this.get(ENDPOINTS.STUDENT_CATEGORY_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getStudentCategories error:', error);
+      throw error;
+    }
+  }
+
+  async addStudentCategory(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addStudentCategory called with payload:', payload);
+      const response = await this.post(ENDPOINTS.STUDENT_CATEGORY_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addStudentCategory error:', error);
+      throw error;
+    }
+  }
+
+  async updateStudentCategory(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateStudentCategory called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.STUDENT_CATEGORY_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateStudentCategory error:', error);
+      throw error;
+    }
+  }
+
+  async deleteStudentCategory(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteStudentCategory called with id:', id);
+      const endpoint = ENDPOINTS.STUDENT_CATEGORY_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteStudentCategory error:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // Post Methods
+  // ============================================================================
+
+  async getPosts(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPosts called with filters:', filters);
+      const response = await this.get(ENDPOINTS.POST_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getPosts error:', error);
+      throw error;
+    }
+  }
+
+  async addPost(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addPost called with payload:', payload);
+      const response = await this.post(ENDPOINTS.POST_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addPost error:', error);
+      throw error;
+    }
+  }
+
+  async updatePost(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updatePost called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.POST_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updatePost error:', error);
+      throw error;
+    }
+  }
+
+  async deletePost(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deletePost called with id:', id);
+      const endpoint = ENDPOINTS.POST_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deletePost error:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // Route Pickup Point Methods
+  // ============================================================================
+
+  async getRoutePickupPoints(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getRoutePickupPoints called with filters:', filters);
+      const response = await this.get(ENDPOINTS.ROUTE_PICKUP_POINT_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getRoutePickupPoints error:', error);
+      throw error;
+    }
+  }
+
+  async addRoutePickupPoint(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addRoutePickupPoint called with payload:', payload);
+      const response = await this.post(ENDPOINTS.ROUTE_PICKUP_POINT_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  async updateRoutePickupPoint(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateRoutePickupPoint called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.ROUTE_PICKUP_POINT_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  async deleteRoutePickupPoint(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteRoutePickupPoint called with id:', id);
+      const endpoint = ENDPOINTS.ROUTE_PICKUP_POINT_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // Leave Type Methods
+  // ============================================================================
+
+  async getLeaveTypes(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getLeaveTypes called with filters:', filters);
+      const response = await this.get(ENDPOINTS.LEAVE_TYPE_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getLeaveTypes error:', error);
+      throw error;
+    }
+  }
+
+  async addLeaveType(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addLeaveType called with payload:', payload);
+      const response = await this.post(ENDPOINTS.LEAVE_TYPE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addLeaveType error:', error);
+      throw error;
+    }
+  }
+
+  async updateLeaveType(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateLeaveType called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.LEAVE_TYPE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateLeaveType error:', error);
+      throw error;
+    }
+  }
+
+  async deleteLeaveType(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteLeaveType called with id:', id);
+      const endpoint = ENDPOINTS.LEAVE_TYPE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteLeaveType error:', error);
+      throw error;
+    }
+  }
+
+  async getPermissionInfos() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPermissionInfos called');
+      const response = await this.get(ENDPOINTS.PERMISSION_INFOS, {});
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getPermissionInfos error:', error);
+      throw error;
+    }
+  }
+
+  async getUserPermissions(userId) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getUserPermissions called with userId:', userId);
+      const response = await this.post(ENDPOINTS.PERMISSION_GET_USER, { user_id: userId });
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getUserPermissions error:', error);
+      throw error;
+    }
+  }
+
+  async savePermissions(userId, codes) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] savePermissions called with userId:', userId, 'codes:', codes);
+      const payload = {
+        user_id: parseInt(userId),
+        codes: Array.isArray(codes) ? codes : [],
+      };
+      const response = await this.post(ENDPOINTS.PERMISSION_SAVE, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] savePermissions error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

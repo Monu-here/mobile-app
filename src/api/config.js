@@ -86,6 +86,40 @@ export const ENDPOINTS = {
   SUBJECT_GET: '/admin/settings/subject',
   SUBJECT_UPDATE: '/admin/settings/subject/update/{id}',
   SUBJECT_DELETE: '/admin/settings/subject/delete/{id}',
+  // Notice endpoints
+  NOTICE_ADD: '/admin/settings/notice/add',
+  NOTICE_GET: '/admin/settings/notice',
+  NOTICE_UPDATE: '/admin/settings/notice/update/{id}',
+  NOTICE_DELETE: '/admin/settings/notice/delete/{id}',
+  // Schedule endpoints
+  SCHEDULE_ADD: '/admin/settings/schedule/add',
+  SCHEDULE_GET: '/admin/settings/schedule',
+  SCHEDULE_UPDATE: '/admin/settings/schedule/update/{id}',
+  SCHEDULE_DELETE: '/admin/settings/schedule/delete/{id}',
+  // Student Category endpoints
+  STUDENT_CATEGORY_ADD: '/admin/settings/student-category/add',
+  STUDENT_CATEGORY_GET: '/admin/settings/student-category',
+  STUDENT_CATEGORY_UPDATE: '/admin/settings/student-category/update/{id}',
+  STUDENT_CATEGORY_DELETE: '/admin/settings/student-category/delete/{id}',
+  // Post endpoints
+  POST_ADD: '/admin/settings/post/add',
+  POST_GET: '/admin/settings/post',
+  POST_UPDATE: '/admin/settings/post/update/{id}',
+  POST_DELETE: '/admin/settings/post/delete/{id}',
+  // Route Pickup Point endpoints
+  ROUTE_PICKUP_POINT_ADD: '/admin/settings/route-pickup-point/add',
+  ROUTE_PICKUP_POINT_GET: '/admin/settings/route-pickup-point',
+  ROUTE_PICKUP_POINT_UPDATE: '/admin/settings/route-pickup-point/update/{id}',
+  ROUTE_PICKUP_POINT_DELETE: '/admin/settings/route-pickup-point/delete/{id}',
+  // Leave Type endpoints
+  LEAVE_TYPE_ADD: '/admin/settings/leave/type/add',
+  LEAVE_TYPE_GET: '/admin/settings/leave/type',
+  LEAVE_TYPE_UPDATE: '/admin/settings/leave/type/update/{id}',
+  LEAVE_TYPE_DELETE: '/admin/settings/leave/type/delete/{id}',
+  // Permission endpoints
+  PERMISSION_INFOS: '/admin/settings/permission/infos',
+  PERMISSION_GET_USER: '/admin/settings/permission/get-user-permission',
+  PERMISSION_SAVE: '/admin/settings/permission/save',
 };
 
 // HTTP Methods
