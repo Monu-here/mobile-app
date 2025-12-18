@@ -1956,6 +1956,55 @@ class ApiService {
     }
   }
 
+  async getPermissionInfos() {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPermissionInfos called');
+      const response = await this.get(ENDPOINTS.PERMISSION_INFOS, {});
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getPermissionInfos error:', error);
+      throw error;
+    }
+  }
+
+  async getUserPermissions(userId) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getUserPermissions called with userId:', userId);
+      const response = await this.post(ENDPOINTS.PERMISSION_GET_USER, { user_id: userId });
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getUserPermissions error:', error);
+      throw error;
+    }
+  }
+
+  async savePermissions(userId, codes) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] savePermissions called with userId:', userId, 'codes:', codes);
+      const payload = {
+        user_id: parseInt(userId),
+        codes: Array.isArray(codes) ? codes : [],
+      };
+      const response = await this.post(ENDPOINTS.PERMISSION_SAVE, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] savePermissions error:', error);
+      throw error;
+    }
+  }
+
   /**
    * Set authentication token
    */

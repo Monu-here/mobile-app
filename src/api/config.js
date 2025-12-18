@@ -116,6 +116,10 @@ export const ENDPOINTS = {
   LEAVE_TYPE_GET: '/admin/settings/leave/type',
   LEAVE_TYPE_UPDATE: '/admin/settings/leave/type/update/{id}',
   LEAVE_TYPE_DELETE: '/admin/settings/leave/type/delete/{id}',
+  // Permission endpoints
+  PERMISSION_INFOS: '/admin/settings/permission/infos',
+  PERMISSION_GET_USER: '/admin/settings/permission/get-user-permission',
+  PERMISSION_SAVE: '/admin/settings/permission/save',
 };
 
 // HTTP Methods
