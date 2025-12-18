@@ -101,6 +101,11 @@ export const ENDPOINTS = {
   STUDENT_CATEGORY_GET: '/admin/settings/student-category',
   STUDENT_CATEGORY_UPDATE: '/admin/settings/student-category/update/{id}',
   STUDENT_CATEGORY_DELETE: '/admin/settings/student-category/delete/{id}',
+  // Post endpoints
+  POST_ADD: '/admin/settings/post/add',
+  POST_GET: '/admin/settings/post',
+  POST_UPDATE: '/admin/settings/post/update/{id}',
+  POST_DELETE: '/admin/settings/post/delete/{id}',
 };
 
 // HTTP Methods

@@ -145,6 +145,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '👥',
         },
         {
+          id: '6.22',
+          title: 'Post',
+          icon: '💼',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

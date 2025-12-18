@@ -1758,6 +1758,72 @@ class ApiService {
     }
   }
 
+  // ============================================================================
+  // Post Methods
+  // ============================================================================
+
+  async getPosts(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPosts called with filters:', filters);
+      const response = await this.get(ENDPOINTS.POST_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getPosts error:', error);
+      throw error;
+    }
+  }
+
+  async addPost(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addPost called with payload:', payload);
+      const response = await this.post(ENDPOINTS.POST_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addPost error:', error);
+      throw error;
+    }
+  }
+
+  async updatePost(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updatePost called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.POST_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updatePost error:', error);
+      throw error;
+    }
+  }
+
+  async deletePost(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deletePost called with id:', id);
+      const endpoint = ENDPOINTS.POST_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deletePost error:', error);
+      throw error;
+    }
+  }
+
   /**
    * Set authentication token
    */
