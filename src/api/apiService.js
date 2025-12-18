@@ -1824,6 +1824,72 @@ class ApiService {
     }
   }
 
+  // ============================================================================
+  // Route Pickup Point Methods
+  // ============================================================================
+
+  async getRoutePickupPoints(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getRoutePickupPoints called with filters:', filters);
+      const response = await this.get(ENDPOINTS.ROUTE_PICKUP_POINT_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getRoutePickupPoints error:', error);
+      throw error;
+    }
+  }
+
+  async addRoutePickupPoint(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addRoutePickupPoint called with payload:', payload);
+      const response = await this.post(ENDPOINTS.ROUTE_PICKUP_POINT_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  async updateRoutePickupPoint(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateRoutePickupPoint called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.ROUTE_PICKUP_POINT_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
+  async deleteRoutePickupPoint(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteRoutePickupPoint called with id:', id);
+      const endpoint = ENDPOINTS.ROUTE_PICKUP_POINT_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteRoutePickupPoint error:', error);
+      throw error;
+    }
+  }
+
   /**
    * Set authentication token
    */

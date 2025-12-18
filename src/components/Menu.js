@@ -150,6 +150,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '💼',
         },
         {
+          id: '6.23',
+          title: 'Route Pickup Point',
+          icon: '🛣️📍',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

@@ -106,6 +106,11 @@ export const ENDPOINTS = {
   POST_GET: '/admin/settings/post',
   POST_UPDATE: '/admin/settings/post/update/{id}',
   POST_DELETE: '/admin/settings/post/delete/{id}',
+  // Route Pickup Point endpoints
+  ROUTE_PICKUP_POINT_ADD: '/admin/settings/route-pickup-point/add',
+  ROUTE_PICKUP_POINT_GET: '/admin/settings/route-pickup-point',
+  ROUTE_PICKUP_POINT_UPDATE: '/admin/settings/route-pickup-point/update/{id}',
+  ROUTE_PICKUP_POINT_DELETE: '/admin/settings/route-pickup-point/delete/{id}',
 };
 
 // HTTP Methods
