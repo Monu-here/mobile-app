@@ -140,6 +140,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '📅',
         },
         {
+          id: '6.21',
+          title: 'Student Category',
+          icon: '👥',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',

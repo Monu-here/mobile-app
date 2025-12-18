@@ -96,6 +96,11 @@ export const ENDPOINTS = {
   SCHEDULE_GET: '/admin/settings/schedule',
   SCHEDULE_UPDATE: '/admin/settings/schedule/update/{id}',
   SCHEDULE_DELETE: '/admin/settings/schedule/delete/{id}',
+  // Student Category endpoints
+  STUDENT_CATEGORY_ADD: '/admin/settings/student-category/add',
+  STUDENT_CATEGORY_GET: '/admin/settings/student-category',
+  STUDENT_CATEGORY_UPDATE: '/admin/settings/student-category/update/{id}',
+  STUDENT_CATEGORY_DELETE: '/admin/settings/student-category/delete/{id}',
 };
 
 // HTTP Methods

@@ -23,6 +23,7 @@ import ScholarshipScreen from './src/screens/ScholarshipScreen';
 import SubjectScreen from './src/screens/SubjectScreen';
 import NoticeScreen from './src/screens/NoticeScreen';
 import ScheduleScreen from './src/screens/ScheduleScreen';
+import StudentCategoryScreen from './src/screens/StudentCategoryScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -168,6 +169,10 @@ export default function App() {
     setAppState('schedule');
   }
 
+  const handleNavigateStudentCategory = () => {
+    setAppState('studentCategory');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -233,6 +238,7 @@ export default function App() {
           onNavigateSubject={handleNavigateSubject}
           onNavigateNotice={handleNavigateNotice}
           onNavigateSchedule={handleNavigateSchedule}
+          onNavigateStudentCategory={handleNavigateStudentCategory}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -254,6 +260,7 @@ export default function App() {
       {appState === 'subject' && <SubjectScreen onBack={() => setAppState('home')} />}
       {appState === 'notice' && <NoticeScreen onBack={() => setAppState('home')} />}
       {appState === 'schedule' && <ScheduleScreen onBack={() => setAppState('home')} />}
+      {appState === 'studentCategory' && <StudentCategoryScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>
