@@ -1890,6 +1890,72 @@ class ApiService {
     }
   }
 
+  // ============================================================================
+  // Leave Type Methods
+  // ============================================================================
+
+  async getLeaveTypes(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getLeaveTypes called with filters:', filters);
+      const response = await this.get(ENDPOINTS.LEAVE_TYPE_GET, filters);
+      const data = Array.isArray(response?.data) ? response.data : [];
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getLeaveTypes error:', error);
+      throw error;
+    }
+  }
+
+  async addLeaveType(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addLeaveType called with payload:', payload);
+      const response = await this.post(ENDPOINTS.LEAVE_TYPE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addLeaveType error:', error);
+      throw error;
+    }
+  }
+
+  async updateLeaveType(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateLeaveType called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.LEAVE_TYPE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateLeaveType error:', error);
+      throw error;
+    }
+  }
+
+  async deleteLeaveType(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteLeaveType called with id:', id);
+      const endpoint = ENDPOINTS.LEAVE_TYPE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteLeaveType error:', error);
+      throw error;
+    }
+  }
+
   /**
    * Set authentication token
    */

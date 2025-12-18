@@ -79,7 +79,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint}) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType}) {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const handleMenuItemPress = (item) => {
@@ -208,6 +208,12 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateRoutePickupPoint();
       }
       console.log('Navigating to Route Pickup Point');
+    } else if (item.id === '6.24') {
+      // Leave Type
+      if (onNavigateLeaveType) {
+        onNavigateLeaveType();
+      }
+      console.log('Navigating to Leave Type');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

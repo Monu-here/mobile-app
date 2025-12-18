@@ -26,6 +26,7 @@ import ScheduleScreen from './src/screens/ScheduleScreen';
 import StudentCategoryScreen from './src/screens/StudentCategoryScreen';
 import PostScreen from './src/screens/PostScreen';
 import RoutePickupPointScreen from './src/screens/RoutePickupPointScreen';
+import LeaveTypeScreen from './src/screens/LeaveTypeScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -183,6 +184,10 @@ export default function App() {
     setAppState('routePickupPoint');
   }
 
+  const handleNavigateLeaveType = () => {
+    setAppState('leaveType');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -251,6 +256,7 @@ export default function App() {
           onNavigateStudentCategory={handleNavigateStudentCategory}
           onNavigatePost={handleNavigatePost}
           onNavigateRoutePickupPoint={handleNavigateRoutePickupPoint}
+          onNavigateLeaveType={handleNavigateLeaveType}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -275,6 +281,7 @@ export default function App() {
       {appState === 'studentCategory' && <StudentCategoryScreen onBack={() => setAppState('home')} />}
       {appState === 'post' && <PostScreen onBack={() => setAppState('home')} />}
       {appState === 'routePickupPoint' && <RoutePickupPointScreen onBack={() => setAppState('home')} />}
+      {appState === 'leaveType' && <LeaveTypeScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

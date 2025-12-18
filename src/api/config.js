@@ -111,6 +111,11 @@ export const ENDPOINTS = {
   ROUTE_PICKUP_POINT_GET: '/admin/settings/route-pickup-point',
   ROUTE_PICKUP_POINT_UPDATE: '/admin/settings/route-pickup-point/update/{id}',
   ROUTE_PICKUP_POINT_DELETE: '/admin/settings/route-pickup-point/delete/{id}',
+  // Leave Type endpoints
+  LEAVE_TYPE_ADD: '/admin/settings/leave/type/add',
+  LEAVE_TYPE_GET: '/admin/settings/leave/type',
+  LEAVE_TYPE_UPDATE: '/admin/settings/leave/type/update/{id}',
+  LEAVE_TYPE_DELETE: '/admin/settings/leave/type/delete/{id}',
 };
 
 // HTTP Methods
