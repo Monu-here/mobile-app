@@ -135,6 +135,11 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
           icon: '📢',
         },
         {
+          id: '6.20',
+          title: 'Schedule',
+          icon: '📅',
+        },
+        {
           id: '6.2',
           title: 'User Preferences',
           icon: '👤',
