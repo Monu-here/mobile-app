@@ -27,6 +27,7 @@ import StudentCategoryScreen from './src/screens/StudentCategoryScreen';
 import PostScreen from './src/screens/PostScreen';
 import RoutePickupPointScreen from './src/screens/RoutePickupPointScreen';
 import LeaveTypeScreen from './src/screens/LeaveTypeScreen';
+import PermissionScreen from './src/screens/PermissionScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -188,6 +189,10 @@ export default function App() {
     setAppState('leaveType');
   }
 
+  const handleNavigatePermission = () => {
+    setAppState('permission');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -257,6 +262,7 @@ export default function App() {
           onNavigatePost={handleNavigatePost}
           onNavigateRoutePickupPoint={handleNavigateRoutePickupPoint}
           onNavigateLeaveType={handleNavigateLeaveType}
+          onNavigatePermission={handleNavigatePermission}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -282,6 +288,7 @@ export default function App() {
       {appState === 'post' && <PostScreen onBack={() => setAppState('home')} />}
       {appState === 'routePickupPoint' && <RoutePickupPointScreen onBack={() => setAppState('home')} />}
       {appState === 'leaveType' && <LeaveTypeScreen onBack={() => setAppState('home')} />}
+      {appState === 'permission' && <PermissionScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>
