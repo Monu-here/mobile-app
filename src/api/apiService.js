@@ -2130,11 +2130,17 @@ class ApiService {
    */
   async login(email, password) {
     try {
+      console.log('[apiService.login] Sending login request for:', email);
       const response = await this.post(ENDPOINTS.LOGIN, { email, password });
+
+      console.log('[apiService.login] Received response:', JSON.stringify(response, null, 2));
 
       // Normalize and extract token from common response shapes
       const token = response?.token || response?.access_token || response?.data?.token || response?.auth?.token || null;
       const user = response?.user || response?.data?.user || response?.data || null;
+
+      console.log('[apiService.login] Extracted token:', !!token);
+      console.log('[apiService.login] Extracted user:', user);
 
       if (token) {
         this.setToken(token);
@@ -2143,9 +2149,13 @@ class ApiService {
       // Return a consistent shape
       return { raw: response, token, user };
     } catch (error) {
-      // Log login error for debugging and rethrow
-      // eslint-disable-next-line no-console
-      console.error('[apiService] login error:', error);
+      // Log login error for debugging
+      console.error('[apiService.login] Error:', {
+        status: error?.response?.status,
+        statusText: error?.response?.statusText,
+        data: error?.response?.data,
+        message: error?.message,
+      });
       throw error;
     }
   }

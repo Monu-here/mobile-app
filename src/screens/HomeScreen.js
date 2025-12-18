@@ -319,6 +319,7 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         visible={menuVisible}
         onClose={() => setMenuVisible(false)}
         onMenuItemPress={handleMenuItemPress}
+        userPermissions={user?.permissions || user?.raw?.permissions || []}
       />
     </SafeAreaView>
   );

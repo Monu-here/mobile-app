@@ -57,15 +57,33 @@ export default function LoginScreen({ onLoginSuccess, onNavigateSignUp }) {
     setLoading(true);
     try {
       // Call real API
+      console.log('[LoginScreen] Attempting login with email:', email.trim());
       const result = await apiService.login(email.trim(), password);
+      
+      console.log('[LoginScreen] Login response:', JSON.stringify(result, null, 2));
 
       const token = result?.token;
       const user = result?.user || result?.raw || null;
 
-      if (token) {
-        await storeToken(token);
-        apiService.setToken(token);
+      console.log('[LoginScreen] Extracted token:', !!token);
+      console.log('[LoginScreen] Extracted user:', user);
+
+      // Check if login was actually successful
+      if (!token) {
+        throw new Error('Login failed: No authentication token received');
       }
+
+      if (!user) {
+        throw new Error('Login failed: No user data received');
+      }
+
+      // Verify user has admin access (only if role field exists)
+      if (user.role && ![0, 1, 2].includes(parseInt(user.role))) {
+        throw new Error(`Access denied: Role ${user.role} does not have admin privileges`);
+      }
+
+      await storeToken(token);
+      apiService.setToken(token);
 
       if (user) {
         await storeUserData(user);
@@ -78,13 +96,30 @@ export default function LoginScreen({ onLoginSuccess, onNavigateSignUp }) {
         await clearRememberMe();
       }
 
-  setLoading(false);
-  showToast('Signed in successfully', 'success');
-  onLoginSuccess && onLoginSuccess({ email: email.trim(), user });
+      setLoading(false);
+      showToast('Signed in successfully', 'success');
+      onLoginSuccess && onLoginSuccess({ email: email.trim(), user });
     } catch (error) {
       setLoading(false);
+      console.error('[LoginScreen] Login error details:', error);
+      
       // Try to show a meaningful message
-      const message = error?.message || (error?.data && error.data.message) || 'Login failed. Please try again.';
+      let message = 'Login failed. Please check your credentials.';
+      
+      if (error?.response?.status === 401) {
+        message = 'Invalid email or password';
+      } else if (error?.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error?.response?.data?.error) {
+        message = error.response.data.error;
+      } else if (error?.message) {
+        message = error.message;
+      } else if (error?.data?.message) {
+        message = error.data.message;
+      } else if (error?.data?.error) {
+        message = error.data.error;
+      }
+      
       setErrors({ submit: message });
       showToast(message, 'error');
     }

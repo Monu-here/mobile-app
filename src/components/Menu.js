@@ -9,7 +9,35 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-export default function Menu({ visible, onClose, onMenuItemPress }) {
+// Permission code mapping for menu items
+// Maps menu IDs to their required permission codes from backend routes
+const MENU_PERMISSION_MAP = {
+  // Settings Submenu Items
+  '6.1': '001.001',   // School Settings
+  '6.5': '001.001',   // Academic Year (view)
+  '6.6': '001.006',   // Branch (view)
+  '6.7': '001.011',   // Pickup Point (view)
+  '6.8': '001.016',   // Grade (view)
+  '6.9': '001.020',   // Section (view)
+  '6.18': '001.055',  // Subject (view)
+  '6.10': '001.025',  // Vehicle (view)
+  '6.11': '001.025',  // Vehicle (view)
+  '6.12': '001.040',  // Event (view)
+  '6.13': '001.045',  // Academic Calendar (view)
+  '6.14': '001.050',  // Caste (view)
+  '6.15': '001.060',  // Religion (view)
+  '6.16': '001.095',  // Route (view)
+  '6.17': '001.075',  // Scholarship (view)
+  '6.19': '001.065',  // Notice (view)
+  '6.20': '001.070',  // Schedule (view)
+  '6.21': '001.080',  // Student Category (view)
+  '6.22': '001.090',  // Post (view)
+  '6.23': '001.100',  // Route Pickup Point (view)
+  '6.24': '001.105',  // Leave Type (view)
+  '6.25': '001.100',  // Permission
+};
+
+export default function Menu({ visible, onClose, onMenuItemPress, userPermissions = [] }) {
   const [expandedMenu, setExpandedMenu] = useState(null);
 
   const menuItems = [
@@ -184,6 +212,57 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
     },
   ];
 
+  // Helper function to check if user has permission for a menu item
+  const hasPermission = (menuId) => {
+    // If no permissions provided, show all items (for super admin)
+    if (!userPermissions || userPermissions.length === 0) {
+      return true;
+    }
+
+    // Check if this menu item requires a permission
+    const requiredPermission = MENU_PERMISSION_MAP[menuId];
+    if (!requiredPermission) {
+      // No permission required for this item, show it
+      return true;
+    }
+
+    // Check if user has this permission
+    return userPermissions.includes(requiredPermission);
+  };
+
+  // Get filtered submenu items based on user permissions
+  const getFilteredSubmenu = (submenu) => {
+    if (!submenu) return null;
+    return submenu.filter(item => hasPermission(item.id));
+  };
+
+  // Get filtered menu items based on user permissions
+  const getFilteredMenuItems = () => {
+    console.log('[Menu] Current user permissions:', userPermissions);
+    
+    const filtered = menuItems.map(item => {
+      if (item.submenu) {
+        return {
+          ...item,
+          submenu: getFilteredSubmenu(item.submenu)
+        };
+      }
+      return item;
+    }).filter(item => {
+      // Only show main menu items that have permission or have visible subitems
+      if (item.id === '6' && item.submenu) {
+        return item.submenu.length > 0;
+      }
+      return hasPermission(item.id);
+    });
+    
+    console.log('[Menu] Filtered menu items:', filtered.length, 'items visible');
+    
+    return filtered;
+  };
+
+  const filteredMenuItems = getFilteredMenuItems();
+
   const toggleSubmenu = (id) => {
     setExpandedMenu(expandedMenu === id ? null : id);
   };
@@ -263,7 +342,7 @@ export default function Menu({ visible, onClose, onMenuItemPress }) {
 
           {/* Menu Items */}
           <FlatList
-            data={menuItems}
+            data={filteredMenuItems}
             renderItem={renderMenuItem}
             keyExtractor={(item) => item.id}
             scrollEnabled={true}
