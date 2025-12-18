@@ -1613,6 +1613,86 @@ class ApiService {
   }
 
   /**
+   * Get schedules with optional filters
+   * @param {Object} filters { academic_year_id, grade_id, staff_id, start_time, end_time }
+   */
+  async getSchedules(filters = {}) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSchedules called with filters:', filters);
+      const response = await this.post(ENDPOINTS.SCHEDULE_GET, filters);
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSchedules error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new schedule
+   * @param {Object} payload { grade_id, section_id, staff_id, subject_id, day, start_time, end_time, academic_year_id }
+   */
+  async addSchedule(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addSchedule called with payload:', payload);
+      const response = await this.post(ENDPOINTS.SCHEDULE_ADD, payload);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a schedule
+   * @param {number} id - Schedule ID
+   * @param {Object} payload { grade_id, section_id, staff_id, subject_id, day, start_time, end_time, academic_year_id }
+   */
+  async updateSchedule(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateSchedule called with id:', id, 'payload:', payload);
+      const endpoint = ENDPOINTS.SCHEDULE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, { ...payload, _method: 'POST' });
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a schedule
+   * @param {number} id - Schedule ID
+   */
+  async deleteSchedule(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteSchedule called with id:', id);
+      const endpoint = ENDPOINTS.SCHEDULE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      const data = response?.data || response || null;
+      const message = (typeof response?.message === 'string') ? response.message : null;
+      return { data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Set authentication token
    */
   setToken(token) {

@@ -91,6 +91,11 @@ export const ENDPOINTS = {
   NOTICE_GET: '/admin/settings/notice',
   NOTICE_UPDATE: '/admin/settings/notice/update/{id}',
   NOTICE_DELETE: '/admin/settings/notice/delete/{id}',
+  // Schedule endpoints
+  SCHEDULE_ADD: '/admin/settings/schedule/add',
+  SCHEDULE_GET: '/admin/settings/schedule',
+  SCHEDULE_UPDATE: '/admin/settings/schedule/update/{id}',
+  SCHEDULE_DELETE: '/admin/settings/schedule/delete/{id}',
 };
 
 // HTTP Methods
