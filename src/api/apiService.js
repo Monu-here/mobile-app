@@ -2374,6 +2374,160 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Search staff with filters
+   * @param {Object} payload { post_id, gender, status, is_teacher, start_end, searchData }
+   */
+  async searchStaff(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] searchStaff called', payload);
+      const response = await this.post(ENDPOINTS.STAFF_SEARCH, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to search staff';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff search completed';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] searchStaff error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new staff member
+   * @param {Object} payload - Staff data including name, email, phone_number, gender, post_id, status, etc.
+   */
+  async addStaff(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addStaff called', payload);
+      const response = await this.post(ENDPOINTS.STAFF_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add staff';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff added successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addStaff error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get staff details
+   * @param {number} id - The ID of the staff member
+   */
+  async getStaff(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getStaff called with id:', id);
+      const url = ENDPOINTS.STAFF_SHOW.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch staff';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff fetched successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getStaff error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a staff member
+   * @param {number} id - The ID of the staff member to update
+   * @param {Object} payload - Staff data to update
+   */
+  async updateStaff(id, payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] updateStaff called with id:', id, 'payload:', payload);
+      const url = ENDPOINTS.STAFF_UPDATE.replace('{id}', id);
+      const response = await this.post(url, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update staff';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff updated successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] updateStaff error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a staff member
+   * @param {number} id - The ID of the staff member to delete
+   */
+  async deleteStaff(id) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] deleteStaff called with id:', id);
+      const url = ENDPOINTS.STAFF_DELETE.replace('{id}', id);
+      const response = await this.get(url);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete staff';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff deleted successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] deleteStaff error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();
