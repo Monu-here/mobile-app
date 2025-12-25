@@ -120,6 +120,12 @@ export const ENDPOINTS = {
   PERMISSION_INFOS: '/admin/settings/permission/infos',
   PERMISSION_GET_USER: '/admin/settings/permission/get-user-permission',
   PERMISSION_SAVE: '/admin/settings/permission/save',
+  // Staff endpoints
+  STAFF_SEARCH: '/admin/staff/search',
+  STAFF_ADD: '/admin/staff/add',
+  STAFF_SHOW: '/admin/staff/show/{id}',
+  STAFF_UPDATE: '/admin/staff/update/{id}',
+  STAFF_DELETE: '/admin/staff/delete/{id}',
 };
 
 // HTTP Methods
