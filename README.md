@@ -155,3 +155,18 @@ Start here:
 **Your SchoolApp is professionally organized and ready to scale! 🎉**
 
 Questions? Check the documentation above. Each file covers a specific aspect in detail.
+<ul>
+<li>
+Install npm :
+<ul>
+<li>
+npm install
+</li>
+</ul>
+ </li>
+ <li>
+ start:
+ <ul><li>npm run start</li></ul>
+ </li>
+
+</ul>
