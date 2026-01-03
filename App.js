@@ -295,7 +295,7 @@ export default function App() {
       {appState === 'routePickupPoint' && <RoutePickupPointScreen onBack={() => setAppState('home')} />}
       {appState === 'leaveType' && <LeaveTypeScreen onBack={() => setAppState('home')} />}
       {appState === 'permission' && <PermissionScreen onBack={() => setAppState('home')} />}
-      {appState === 'staff' && <StaffScreen onBack={() => setAppState('home')} userPermissions={user?.permissions || user?.raw?.permissions || []} />}
+      {appState === 'staff' && <StaffScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

@@ -1,10 +1,9 @@
 // API Configuration
 // Updated to the user-provided API
-export const API_BASE_URL = 'http://mschool.zic.edu.np/api';
+export const API_BASE_URL = 'http://192.168.1.110:8080/api';
 
 export const ENDPOINTS = {
-  // Login endpoint (user provided: http://mschool.zic.edu.np/api/login)
-  LOGIN: '/login',
+   LOGIN: '/login',
    AUTH_CHECK: '/auth-check',
   SUBSCRIBE: '/profile/subscribe',
   CHANGE_PASSWORD: '/change-password',

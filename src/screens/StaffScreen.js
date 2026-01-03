@@ -17,14 +17,13 @@ import apiService from '../api/apiService';
 import { showToast } from '../components/Toast';
 
 // Staff Management Screen Component
-export default function StaffScreen({ onBack, userPermissions = [] }) {
+export default function StaffScreen({ onBack }) {
   const [loading, setLoading] = useState(false);
   const [staffList, setStaffList] = useState([]);
   const [posts, setPosts] = useState([]);
   const [branches, setBranches] = useState([]);
   const [grades, setGrades] = useState([]);
   const [error, setError] = useState(null);
-  const [permissionError, setPermissionError] = useState(null);
 
   // Form state
   const [name, setName] = useState('');
@@ -74,30 +73,7 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
     { label: 'Other', value: '3' },
   ];
 
-  // Permission codes for staff management operations
-  const STAFF_PERMISSIONS = {
-    VIEW: '002.000',    // View staff list
-    ADD: '002.003',     // Add staff
-    EDIT: '002.005',    // Edit staff
-    DELETE: '002.006',  // Delete staff
-  };
-
-  // Helper function to check if user has specific permission
-  const hasPermission = (permissionCode) => {
-    if (!userPermissions || userPermissions.length === 0) {
-      // If no permissions provided, assume super admin
-      return true;
-    }
-    return userPermissions.includes(permissionCode);
-  };
-
   useEffect(() => {
-    // Check if user has access to view staff
-    if (!hasPermission(STAFF_PERMISSIONS.VIEW)) {
-      setPermissionError('You do not have permission to access Staff Management. Required permission: 002.000');
-      return;
-    }
-
     fetchInitialData();
   }, []);
 
@@ -216,13 +192,6 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
   };
 
   const handleAdd = async () => {
-    // Check permission before add/edit
-    const requiredPermission = editingId ? STAFF_PERMISSIONS.EDIT : STAFF_PERMISSIONS.ADD;
-    if (!hasPermission(requiredPermission)) {
-      showToast(`Permission required: ${requiredPermission}`, 'error');
-      return;
-    }
-
     if (!name || !email || !phoneNumber || !gender || !postId || !accountNumber) {
       showToast('Please fill required fields (name, email, phone, gender, post, account number)', 'error');
       return;
@@ -283,12 +252,6 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
   };
 
   const handleEdit = (staff) => {
-    // Check permission before edit
-    if (!hasPermission(STAFF_PERMISSIONS.EDIT)) {
-      showToast(`Permission required to edit: ${STAFF_PERMISSIONS.EDIT}`, 'error');
-      return;
-    }
-
     setEditingId(staff.id);
     setName(staff.name || '');
     setEmail(staff.email || '');
@@ -322,12 +285,6 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
   };
 
   const handleDelete = (staffId) => {
-    // Check permission before delete
-    if (!hasPermission(STAFF_PERMISSIONS.DELETE)) {
-      showToast(`Permission required to delete: ${STAFF_PERMISSIONS.DELETE}`, 'error');
-      return;
-    }
-
     Alert.alert(
       'Delete Staff',
       'Are you sure you want to delete this staff member?',
@@ -373,24 +330,20 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
       </View>
 
       <View style={styles.actionButtons}>
-        {hasPermission(STAFF_PERMISSIONS.EDIT) && (
-          <TouchableOpacity
-            style={[styles.actionButton, styles.editButton]}
-            onPress={() => handleEdit(item)}
-            disabled={submitting}
-          >
-            <Text style={styles.buttonText}>Edit</Text>
-          </TouchableOpacity>
-        )}
-        {hasPermission(STAFF_PERMISSIONS.DELETE) && (
-          <TouchableOpacity
-            style={[styles.actionButton, styles.deleteButton]}
-            onPress={() => handleDelete(item.id)}
-            disabled={submitting}
-          >
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[styles.actionButton, styles.editButton]}
+          onPress={() => handleEdit(item)}
+          disabled={submitting}
+        >
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.deleteButton]}
+          onPress={() => handleDelete(item.id)}
+          disabled={submitting}
+        >
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -421,27 +374,6 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
     return gender?.label || id;
   };
 
-  // Permission denied view
-  if (permissionError) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>← Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.title}>Staff Management</Text>
-        </View>
-        <View style={styles.centerContainer}>
-          <View style={styles.permissionDeniedBox}>
-            <Text style={styles.permissionDeniedIcon}>🔒</Text>
-            <Text style={styles.permissionDeniedTitle}>Access Denied</Text>
-            <Text style={styles.permissionDeniedText}>{permissionError}</Text>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -449,17 +381,15 @@ export default function StaffScreen({ onBack, userPermissions = [] }) {
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Staff Management</Text>
-        {hasPermission(STAFF_PERMISSIONS.ADD) && (
-          <TouchableOpacity
-            onPress={() => {
-              resetForm();
-              setShowForm(true);
-            }}
-            style={styles.addButton}
-          >
-            <Text style={styles.addButtonText}>+ Add</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          onPress={() => {
+            resetForm();
+            setShowForm(true);
+          }}
+          style={styles.addButton}
+        >
+          <Text style={styles.addButtonText}>+ Add</Text>
+        </TouchableOpacity>
       </View>
 
       {error && (

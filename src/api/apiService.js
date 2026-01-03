@@ -1961,7 +1961,48 @@ class ApiService {
       // eslint-disable-next-line no-console
       console.log('[apiService] getPermissionInfos called');
       const response = await this.get(ENDPOINTS.PERMISSION_INFOS, {});
-      const data = response?.data || response || null;
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPermissionInfos raw response:', JSON.stringify(response, null, 2));
+      
+      // Handle different response structures
+      let users = [];
+      let permissions = [];
+      
+      // Check if response has data wrapper
+      if (response?.data) {
+        // If data is nested
+        if (response.data.users || response.data.permissions) {
+          users = Array.isArray(response.data.users) ? response.data.users : [];
+          permissions = Array.isArray(response.data.permissions) ? response.data.permissions : [];
+        } else if (Array.isArray(response.data.data?.users)) {
+          // Double nested
+          users = response.data.data.users;
+          permissions = response.data.data.permissions || [];
+        }
+      } else if (response?.users || response?.permissions) {
+        // Direct properties
+        users = Array.isArray(response.users) ? response.users : [];
+        permissions = Array.isArray(response.permissions) ? response.permissions : [];
+      }
+      
+      // If no users found, try to fetch staff list as users
+      if (users.length === 0) {
+        // eslint-disable-next-line no-console
+        console.log('[apiService] No users in permission infos, fetching staff list');
+        try {
+          const staffResult = await this.searchStaff({});
+          if (staffResult?.data) {
+            users = Array.isArray(staffResult.data) ? staffResult.data : [];
+          }
+        } catch (staffError) {
+          // eslint-disable-next-line no-console
+          console.warn('[apiService] Failed to fetch staff as users:', staffError);
+        }
+      }
+      
+      const data = { users, permissions };
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getPermissionInfos extracted data:', JSON.stringify(data, null, 2));
       const message = (typeof response?.message === 'string') ? response.message : null;
       return { data, message };
     } catch (error) {
