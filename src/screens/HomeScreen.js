@@ -7,8 +7,11 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
+  Modal,
 } from 'react-native';
 import Menu from '../components/Menu';
+import apiService from '../api/apiService';
 
 // Helper to map role id to readable label
 function getRoleLabel(role) {
@@ -81,6 +84,49 @@ function renderRoleSpecific(user) {
 
 export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff }) {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [dashboardCounts, setDashboardCounts] = useState(null);
+  const [loadingCounts, setLoadingCounts] = useState(true);
+  const [grades, setGrades] = useState([]);
+  const [selectedGradeId, setSelectedGradeId] = useState(null);
+  const [showGradePicker, setShowGradePicker] = useState(false);
+
+  // Fetch grades
+  React.useEffect(() => {
+    const fetchGrades = async () => {
+      try {
+        const result = await apiService.getGrades();
+        const gradeData = result?.data;
+        let gradeList = [];
+        if (gradeData?.grade && Array.isArray(gradeData.grade)) {
+          gradeList = gradeData.grade;
+        } else if (Array.isArray(gradeData)) {
+          gradeList = gradeData;
+        }
+        setGrades(gradeList);
+      } catch (error) {
+        console.error('[HomeScreen] Error fetching grades:', error);
+      }
+    };
+    fetchGrades();
+  }, []);
+
+  // Fetch dashboard counts
+  React.useEffect(() => {
+    const fetchDashboardCounts = async () => {
+      try {
+        setLoadingCounts(true);
+        const result = await apiService.getDashboardCounts(selectedGradeId);
+        console.log('[HomeScreen] Dashboard counts:', result?.data);
+        setDashboardCounts(result?.data);
+      } catch (error) {
+        console.error('[HomeScreen] Error fetching dashboard counts:', error);
+      } finally {
+        setLoadingCounts(false);
+      }
+    };
+    
+    fetchDashboardCounts();
+  }, [selectedGradeId]);
 
   const handleMenuItemPress = (item) => {
     console.log('Menu item pressed:', item.title);
@@ -273,22 +319,105 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
 
         {/* Quick Stats */}
         <View style={styles.statsContainer}>
-          <View style={[styles.statCard, { backgroundColor: '#E8E4F8' }]}>
-            <Text style={styles.statIcon}>📊</Text>
-            <Text style={styles.statLabel}>Classes</Text>
-            <Text style={styles.statValue}>12</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: '#E0F7F4' }]}>
-            <Text style={styles.statIcon}>👥</Text>
-            <Text style={styles.statLabel}>Students</Text>
-            <Text style={styles.statValue}>485</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: '#FFE8E8' }]}>
-            <Text style={styles.statIcon}>✓</Text>
-            <Text style={styles.statLabel}>Attendance</Text>
-            <Text style={styles.statValue}>94%</Text>
-          </View>
+          {loadingCounts ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#6C63FF" />
+            </View>
+          ) : (
+            <>
+              <View style={[styles.statCard, { backgroundColor: '#E0F7F4' }]}>
+                <Text style={styles.statIcon}>👨‍🎓</Text>
+                <Text style={styles.statLabel}>Students</Text>
+                <Text style={styles.statValue}>{dashboardCounts?.totalStudent || 0}</Text>
+                <Text style={styles.statSubtext}>Passed: {dashboardCounts?.totalPassOutStudent || 0}</Text>
+              </View>
+              <View style={[styles.statCard, { backgroundColor: '#FFE8E8' }]}>
+                <Text style={styles.statIcon}>👨‍🏫</Text>
+                <Text style={styles.statLabel}>Teachers</Text>
+                <Text style={styles.statValue}>{dashboardCounts?.totalStaffTeacher || 0}</Text>
+                <Text style={styles.statSubtext}>Passed: {dashboardCounts?.totalPassOutTeacher || 0}</Text>
+              </View>
+              <View style={[styles.statCard, { backgroundColor: '#E8E4F8' }]}>
+                <Text style={styles.statIcon}>👨‍💼</Text>
+                <Text style={styles.statLabel}>Staff</Text>
+                <Text style={styles.statValue}>{dashboardCounts?.totalStaff || 0}</Text>
+                <Text style={styles.statSubtext}>Passed: {dashboardCounts?.totalPassOutStaff || 0}</Text>
+              </View>
+              <View style={[styles.statCard, { backgroundColor: '#FFF4E6' }]}>
+                <Text style={styles.statIcon}>📚</Text>
+                <Text style={styles.statLabel}>Subjects</Text>
+                <Text style={styles.statValue}>{dashboardCounts?.totalSubjects || 0}</Text>
+              </View>
+            </>
+          )}
         </View>
+
+        {/* Today's Attendance Chart */}
+        {!loadingCounts && (
+          <View style={styles.attendanceSection}>
+            <View style={styles.attendanceHeader}>
+              <Text style={styles.sectionTitle}>Today's Attendance</Text>
+              <TouchableOpacity 
+                style={styles.filterButton}
+                onPress={() => setShowGradePicker(true)}
+              >
+                <Text style={styles.filterButtonText}>
+                  {selectedGradeId ? grades.find(g => g.id === selectedGradeId)?.name || 'Filter' : 'All Grades'}
+                </Text>
+                <Text style={styles.filterIcon}>▼</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {dashboardCounts?.todayAttendance && dashboardCounts.todayAttendance.length > 0 ? (
+              <>
+                <View style={styles.attendanceChart}>
+                  {dashboardCounts.todayAttendance.map((item, index) => {
+                    const total = dashboardCounts.todayAttendance.reduce((sum, i) => sum + parseInt(i.count || 0), 0);
+                    const percentage = total > 0 ? ((parseInt(item.count || 0) / total) * 100).toFixed(0) : 0;
+                    const maxCount = Math.max(...dashboardCounts.todayAttendance.map(i => parseInt(i.count || 0)));
+                    const barHeight = maxCount > 0 ? (parseInt(item.count || 0) / maxCount) * 100 : 0;
+                    
+                    // Map attendance types to readable labels and colors
+                    const typeMap = {
+                      '1': { label: 'Present', color: '#4CAF50', icon: '✓' },
+                      '2': { label: 'Absent', color: '#F44336', icon: '✗' },
+                      '3': { label: 'Late', color: '#FF9800', icon: '⏰' },
+                      '4': { label: 'Half Day', color: '#2196F3', icon: '½' },
+                    };
+                    const typeInfo = typeMap[item.attendance_type] || { label: `Type ${item.attendance_type}`, color: '#9E9E9E', icon: '?' };
+
+                    return (
+                      <View key={index} style={styles.barContainer}>
+                        <View style={styles.barWrapper}>
+                          <Text style={styles.barCount}>{item.count || 0}</Text>
+                          <View style={[styles.bar, { height: Math.max(barHeight, 15), backgroundColor: typeInfo.color }]}>
+                            <View style={[styles.barGlow, { backgroundColor: typeInfo.color }]} />
+                          </View>
+                        </View>
+                        <Text style={styles.barIcon}>{typeInfo.icon}</Text>
+                        <Text style={styles.barLabel}>{typeInfo.label}</Text>
+                        <Text style={styles.barPercentage}>{percentage}%</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+                <View style={styles.attendanceSummary}>
+                  <Text style={styles.summaryText}>
+                    Total: {dashboardCounts.todayAttendance.reduce((sum, i) => sum + parseInt(i.count || 0), 0)} students
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <View style={styles.noDataContainer}>
+                <Text style={styles.noDataIcon}>📊</Text>
+                <Text style={styles.noDataText}>No attendance data available</Text>
+                <Text style={styles.noDataSubtext}>
+                  {selectedGradeId ? 'No records found for selected grade' : 'No records found for today'}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* Recent Activity */}
         <View style={styles.sectionContainer}>
@@ -327,6 +456,56 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onMenuItemPress={handleMenuItemPress}
         userPermissions={user?.permissions || user?.raw?.permissions || []}
       />
+
+      {/* Grade Picker Modal */}
+      <Modal
+        visible={showGradePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowGradePicker(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowGradePicker(false)}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Grade</Text>
+              <TouchableOpacity onPress={() => setShowGradePicker(false)}>
+                <Text style={styles.modalClose}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.gradeList}>
+              <TouchableOpacity
+                style={[styles.gradeOption, !selectedGradeId && styles.gradeOptionSelected]}
+                onPress={() => {
+                  setSelectedGradeId(null);
+                  setShowGradePicker(false);
+                }}
+              >
+                <Text style={[styles.gradeOptionText, !selectedGradeId && styles.gradeOptionTextSelected]}>
+                  All Grades
+                </Text>
+              </TouchableOpacity>
+              {grades.map((grade) => (
+                <TouchableOpacity
+                  key={grade.id}
+                  style={[styles.gradeOption, selectedGradeId === grade.id && styles.gradeOptionSelected]}
+                  onPress={() => {
+                    setSelectedGradeId(grade.id);
+                    setShowGradePicker(false);
+                  }}
+                >
+                  <Text style={[styles.gradeOptionText, selectedGradeId === grade.id && styles.gradeOptionTextSelected]}>
+                    {grade.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -386,11 +565,19 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     marginBottom: 28,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
   statCard: {
     flex: 1,
+    minWidth: '45%',
     paddingVertical: 16,
     paddingHorizontal: 12,
     borderRadius: 12,
@@ -412,9 +599,148 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   statValue: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
     color: '#1A1A1A',
+    marginBottom: 2,
+  },
+  statSubtext: {
+    fontSize: 10,
+    color: '#888',
+    fontWeight: '500',
+  },
+  attendanceSection: {
+    marginBottom: 28,
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  attendanceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  filterButtonText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#333',
+    marginRight: 4,
+  },
+  filterIcon: {
+    fontSize: 8,
+    color: '#666',
+  },
+  attendanceChart: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'flex-end',
+    height: 140,
+    paddingTop: 8,
+    paddingHorizontal: 8,
+  },
+  barContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 4,
+  },
+  barWrapper: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    height: 110,
+    marginBottom: 6,
+  },
+  bar: {
+    width: 24,
+    borderRadius: 12,
+    minHeight: 15,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  barGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '30%',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    opacity: 0.3,
+  },
+  barCount: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 3,
+  },
+  barIcon: {
+    fontSize: 14,
+    marginBottom: 3,
+  },
+  barLabel: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 1,
+  },
+  barPercentage: {
+    fontSize: 8,
+    color: '#999',
+    fontWeight: '600',
+  },
+  attendanceSummary: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    alignItems: 'center',
+  },
+  summaryText: {
+    fontSize: 11,
+    color: '#666',
+    fontWeight: '600',
+  },
+  noDataContainer: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noDataIcon: {
+    fontSize: 48,
+    marginBottom: 12,
+    opacity: 0.5,
+  },
+  noDataText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 4,
+  },
+  noDataSubtext: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '400',
   },
   sectionContainer: {
     marginBottom: 28,
@@ -519,5 +845,56 @@ const styles = StyleSheet.create({
   roleText: {
     fontSize: 12,
     color: '#666',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '60%',
+    paddingBottom: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  modalClose: {
+    fontSize: 20,
+    color: '#666',
+    fontWeight: '300',
+  },
+  gradeList: {
+    maxHeight: 400,
+  },
+  gradeOption: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
+  },
+  gradeOptionSelected: {
+    backgroundColor: '#E8E4F8',
+  },
+  gradeOptionText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  gradeOptionTextSelected: {
+    color: '#6C63FF',
+    fontWeight: '700',
   },
 });

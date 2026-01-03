@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   PROFILE: '/user/profile',
   REFRESH_TOKEN: '/auth/refresh',
   CONFIG_VERSION_CHECK: '/admin/config-version-check',
+  DASHBOARD_COUNT: '/admin/settings/count',
   SCHOOL_SETTINGS: '/admin/settings/setting/add',
   // GET current settings (assumed endpoint)
   SCHOOL_SETTINGS_GET: '/admin/settings/setting',

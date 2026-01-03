@@ -27,6 +27,28 @@ class ApiService {
   }
 
   /**
+   * Get dashboard counts (students, staff, teachers, subjects, attendance)
+   */
+  async getDashboardCounts(gradeId = null) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getDashboardCounts called with gradeId:', gradeId);
+      const payload = {};
+      if (gradeId) {
+        payload.grade_id = gradeId;
+      }
+      const response = await this.post(ENDPOINTS.DASHBOARD_COUNT, payload);
+      const data = response?.data || response || null;
+      const message = response?.message || null;
+      return { raw: response, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getDashboardCounts error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Get academic years list
    */
   async getAcademicYears() {
