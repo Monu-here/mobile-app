@@ -126,6 +126,9 @@ export const ENDPOINTS = {
   STAFF_SHOW: '/admin/staff/show/{id}',
   STAFF_UPDATE: '/admin/staff/update/{id}',
   STAFF_DELETE: '/admin/staff/delete/{id}',
+  // Staff Attendance endpoints
+  STAFF_ATTENDANCE_LIST: '/admin/staff-attendance',
+  STAFF_ATTENDANCE_ADD: '/admin/staff-attendance/add',
 };
 
 // HTTP Methods

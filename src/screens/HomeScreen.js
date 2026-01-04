@@ -82,7 +82,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff,onNavigateStaffAttendance }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [dashboardCounts, setDashboardCounts] = useState(null);
   const [loadingCounts, setLoadingCounts] = useState(true);
@@ -272,6 +272,12 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateStaff();
       }
       console.log('Navigating to Staff Management');
+    } else if (item.id === '6.27') {
+      // Staff Attendance
+      if (onNavigateStaffAttendance) {
+        onNavigateStaffAttendance();
+      }
+      console.log('Navigating to Staff Attendance');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

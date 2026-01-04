@@ -29,6 +29,7 @@ import RoutePickupPointScreen from './src/screens/RoutePickupPointScreen';
 import LeaveTypeScreen from './src/screens/LeaveTypeScreen';
 import PermissionScreen from './src/screens/PermissionScreen';
 import StaffScreen from './src/screens/StaffScreen';
+import StaffAttendanceScreen from './src/screens/StaffAttendanceScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -198,6 +199,10 @@ export default function App() {
     setAppState('staff');
   }
 
+  const handleNavigateStaffAttendance = () => {
+    setAppState('staffAttendance');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -269,6 +274,7 @@ export default function App() {
           onNavigateLeaveType={handleNavigateLeaveType}
           onNavigatePermission={handleNavigatePermission}
           onNavigateStaff={handleNavigateStaff}
+          onNavigateStaffAttendance={handleNavigateStaffAttendance}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -296,6 +302,7 @@ export default function App() {
       {appState === 'leaveType' && <LeaveTypeScreen onBack={() => setAppState('home')} />}
       {appState === 'permission' && <PermissionScreen onBack={() => setAppState('home')} />}
       {appState === 'staff' && <StaffScreen onBack={() => setAppState('home')} />}
+      {appState === 'staffAttendance' && <StaffAttendanceScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

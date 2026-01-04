@@ -36,6 +36,7 @@ const MENU_PERMISSION_MAP = {
   6.24: "001.105", // Leave Type (view)
   6.25: "001.100", // Permission
   6.26: "002.000", // Staff (view)
+  6.27: "002.007", // Staff Attendance (view/list)
 };
 
 export default function Menu({
@@ -58,6 +59,11 @@ export default function Menu({
       id: "6.26",
       title: "Staff",
       icon: "👨‍💼",
+    },
+    {
+      id: "6.27",
+      title: "Staff Attendance",
+      icon: "👨‍💼✓",
     },
     {
       id: "2",
@@ -202,22 +208,6 @@ export default function Menu({
           id: "6.25",
           title: "Permission",
           icon: "🔐",
-        },
-
-        {
-          id: "6.2",
-          title: "User Preferences",
-          icon: "👤",
-        },
-        {
-          id: "6.3",
-          title: "Notifications",
-          icon: "🔔",
-        },
-        {
-          id: "6.4",
-          title: "Privacy & Security",
-          icon: "🔒",
         },
       ],
     },

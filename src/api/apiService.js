@@ -2591,6 +2591,66 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get staff attendance list
+   * @param {Object} payload { branch_id, attendance_date }
+   */
+  async getStaffAttendance(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getStaffAttendance called', payload);
+      const response = await this.post(ENDPOINTS.STAFF_ATTENDANCE_LIST, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch staff attendance';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff attendance fetched successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getStaffAttendance error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add staff attendance
+   * @param {Object} payload { attendance_date, branch_id, staffs: [{ staff_id, attendance_type, check_in, check_out }] }
+   */
+  async addStaffAttendance(payload) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] addStaffAttendance called', payload);
+      const response = await this.post(ENDPOINTS.STAFF_ATTENDANCE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add staff attendance';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Staff attendance added successfully';
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] addStaffAttendance error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();
