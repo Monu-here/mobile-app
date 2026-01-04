@@ -129,6 +129,16 @@ export const ENDPOINTS = {
   // Staff Attendance endpoints
   STAFF_ATTENDANCE_LIST: '/admin/staff-attendance',
   STAFF_ATTENDANCE_ADD: '/admin/staff-attendance/add',
+  // Exam Subject Schedule endpoints
+  EXAM_SUBJECT_SCHEDULE_LIST: '/admin/exam/subject-schedule',
+  EXAM_SUBJECT_SCHEDULE_ADD: '/admin/exam/subject-schedule/add',
+  EXAM_SUBJECT_SCHEDULE_DELETE: '/admin/exam/subject-schedule/delete',
+  // Exam Type endpoints
+  EXAM_TYPE_LIST: '/admin/exam/type',
+  EXAM_TYPE_ADD: '/admin/exam/type/add',
+  EXAM_TYPE_UPDATE: '/admin/exam/type/update/{id}',
+  EXAM_TYPE_DELETE: '/admin/exam/type/delete/{id}',
+  EXAM_TYPE_SET_STATUS: '/admin/exam/type/set-status/{id}',
 };
 
 // HTTP Methods

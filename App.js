@@ -30,6 +30,8 @@ import LeaveTypeScreen from './src/screens/LeaveTypeScreen';
 import PermissionScreen from './src/screens/PermissionScreen';
 import StaffScreen from './src/screens/StaffScreen';
 import StaffAttendanceScreen from './src/screens/StaffAttendanceScreen';
+import ExamSubjectScheduleScreen from './src/screens/ExamSubjectScheduleScreen';
+import ExamTypeScreen from './src/screens/ExamTypeScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -203,6 +205,14 @@ export default function App() {
     setAppState('staffAttendance');
   }
 
+  const handleNavigateExamSchedule = () => {
+    setAppState('examSchedule');
+  }
+
+  const handleNavigateExamType = () => {
+    setAppState('examType');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -275,6 +285,8 @@ export default function App() {
           onNavigatePermission={handleNavigatePermission}
           onNavigateStaff={handleNavigateStaff}
           onNavigateStaffAttendance={handleNavigateStaffAttendance}
+          onNavigateExamSchedule={handleNavigateExamSchedule}
+          onNavigateExamType={handleNavigateExamType}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -303,6 +315,8 @@ export default function App() {
       {appState === 'permission' && <PermissionScreen onBack={() => setAppState('home')} />}
       {appState === 'staff' && <StaffScreen onBack={() => setAppState('home')} />}
       {appState === 'staffAttendance' && <StaffAttendanceScreen onBack={() => setAppState('home')} />}
+      {appState === 'examSchedule' && <ExamSubjectScheduleScreen onBack={() => setAppState('home')} />}
+      {appState === 'examType' && <ExamTypeScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

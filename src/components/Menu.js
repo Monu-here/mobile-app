@@ -37,6 +37,9 @@ const MENU_PERMISSION_MAP = {
   6.25: "001.100", // Permission
   6.26: "002.000", // Staff (view)
   6.27: "002.007", // Staff Attendance (view/list)
+  // Exam Submenu Items
+  7.1: "003.010", // Exam Subject Schedule (view/list)
+  7.2: "003.001", // Exam Type (view/list)
 };
 
 export default function Menu({
@@ -64,6 +67,24 @@ export default function Menu({
       id: "6.27",
       title: "Staff Attendance",
       icon: "👨‍💼✓",
+    },
+    {
+      id: "7",
+      title: "Exam",
+      icon: "📝",
+      color: "#FF6B6B",
+      submenu: [
+        {
+          id: "7.2",
+          title: "Exam Type",
+          icon: "📋",
+        },
+        {
+          id: "7.1",
+          title: "Exam Schedule",
+          icon: "📅",
+        },
+      ],
     },
     {
       id: "2",

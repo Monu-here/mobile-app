@@ -2651,6 +2651,234 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get exam subject schedule list
+   * @param {Object} filters { exam_type_id?, subject_id? }
+   */
+  async getExamSubjectSchedule(filters = {}) {
+    try {
+      console.log('[apiService] getExamSubjectSchedule called', filters);
+      const response = await this.post(ENDPOINTS.EXAM_SUBJECT_SCHEDULE_LIST, filters);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch exam subject schedules';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam subject schedules fetched successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getExamSubjectSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add/Update exam subject schedule
+   * @param {Object} payload { exam_type_id, schedules: [{ id?, subject_id, date, start_time, end_time }] }
+   */
+  async addExamSubjectSchedule(payload) {
+    try {
+      console.log('[apiService] addExamSubjectSchedule called', payload);
+      const response = await this.post(ENDPOINTS.EXAM_SUBJECT_SCHEDULE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to save exam subject schedule';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam subject schedule saved successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] addExamSubjectSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete exam subject schedule
+   * @param {Object} payload { exam_type_id, subject_id }
+   */
+  async deleteExamSubjectSchedule(payload) {
+    try {
+      console.log('[apiService] deleteExamSubjectSchedule called', payload);
+      const response = await this.post(ENDPOINTS.EXAM_SUBJECT_SCHEDULE_DELETE, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete exam subject schedule';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam subject schedule deleted successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] deleteExamSubjectSchedule error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get exam types list
+   */
+  async getExamTypes() {
+    try {
+      console.log('[apiService] getExamTypes called');
+      const response = await this.get(ENDPOINTS.EXAM_TYPE_LIST);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch exam types';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam types fetched successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getExamTypes error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add exam type
+   * @param {Object} payload { name, academic_year?, status?, can_enter_mark?, is_publish?, is_schedule_publish? }
+   */
+  async addExamType(payload) {
+    try {
+      console.log('[apiService] addExamType called', payload);
+      const response = await this.post(ENDPOINTS.EXAM_TYPE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add exam type';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam type added successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] addExamType error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update exam type
+   * @param {number} id Exam type ID
+   * @param {Object} payload { name, academic_year?, status?, can_enter_mark?, is_publish?, is_schedule_publish? }
+   */
+  async updateExamType(id, payload) {
+    try {
+      console.log('[apiService] updateExamType called', id, payload);
+      const endpoint = ENDPOINTS.EXAM_TYPE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update exam type';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam type updated successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] updateExamType error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete exam type
+   * @param {number} id Exam type ID
+   */
+  async deleteExamType(id) {
+    try {
+      console.log('[apiService] deleteExamType called', id);
+      const endpoint = ENDPOINTS.EXAM_TYPE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete exam type';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam type deleted successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] deleteExamType error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Set exam type status
+   * @param {number} id Exam type ID
+   * @param {Object} payload { status: 0|1, column: 'can_enter_mark'|'is_publish'|'is_schedule_publish' }
+   */
+  async setExamTypeStatus(id, payload) {
+    try {
+      console.log('[apiService] setExamTypeStatus called', id, payload);
+      const endpoint = ENDPOINTS.EXAM_TYPE_SET_STATUS.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to set exam type status';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam type status updated successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] setExamTypeStatus error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();
