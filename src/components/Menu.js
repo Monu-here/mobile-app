@@ -40,6 +40,7 @@ const MENU_PERMISSION_MAP = {
   // Exam Submenu Items
   7.1: "003.010", // Exam Subject Schedule (view/list)
   7.2: "003.001", // Exam Type (view/list)
+  7.3: "003.006", // Exam Setup (view/list)
 };
 
 export default function Menu({
@@ -83,6 +84,11 @@ export default function Menu({
           id: "7.1",
           title: "Exam Schedule",
           icon: "📅",
+        },
+        {
+          id: "7.3",
+          title: "Exam Setup",
+          icon: "⚙️",
         },
       ],
     },

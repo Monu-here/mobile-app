@@ -139,6 +139,11 @@ export const ENDPOINTS = {
   EXAM_TYPE_UPDATE: '/admin/exam/type/update/{id}',
   EXAM_TYPE_DELETE: '/admin/exam/type/delete/{id}',
   EXAM_TYPE_SET_STATUS: '/admin/exam/type/set-status/{id}',
+  // Exam Setup endpoints
+  EXAM_SETUP_LIST: '/admin/exam/setup',
+  EXAM_SETUP_ADD: '/admin/exam/setup/add',
+  EXAM_SETUP_UPDATE: '/admin/exam/setup/update/{id}',
+  EXAM_SETUP_DELETE: '/admin/exam/setup/delete/{id}',
 };
 
 // HTTP Methods

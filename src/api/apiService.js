@@ -2879,6 +2879,121 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get exam setup list
+   * @param {Object} filters { grade_id, exam_type_id }
+   */
+  async getExamSetup(filters = {}) {
+    try {
+      console.log('[apiService] getExamSetup called', filters);
+      const response = await this.post(ENDPOINTS.EXAM_SETUP_LIST, filters);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch exam setups';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam setups fetched successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getExamSetup error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add exam setup
+   * @param {Object} payload { grade_id, exam_type_id, subjects_ids, is_op, total_pass_mark, total_mark, parts }
+   */
+  async addExamSetup(payload) {
+    try {
+      console.log('[apiService] addExamSetup called', payload);
+      const response = await this.post(ENDPOINTS.EXAM_SETUP_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add exam setup';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam setup added successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] addExamSetup error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update exam setup
+   * @param {number} id Exam setup ID
+   * @param {Object} payload { subject_id, exam_title, exam_mark, pass_mark }
+   */
+  async updateExamSetup(id, payload) {
+    try {
+      console.log('[apiService] updateExamSetup called', id, payload);
+      const endpoint = ENDPOINTS.EXAM_SETUP_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update exam setup';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam setup updated successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] updateExamSetup error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete exam setup
+   * @param {number} id Exam setup ID
+   */
+  async deleteExamSetup(id) {
+    try {
+      console.log('[apiService] deleteExamSetup called', id);
+      const endpoint = ENDPOINTS.EXAM_SETUP_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete exam setup';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam setup deleted successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] deleteExamSetup error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();
