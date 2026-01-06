@@ -149,6 +149,9 @@ export const ENDPOINTS = {
   MARK_GRADE_ADD: '/admin/exam/mark-grade/add',
   MARK_GRADE_UPDATE: '/admin/exam/mark-grade/update/{id}',
   MARK_GRADE_DELETE: '/admin/exam/mark-grade/delete/{id}',
+  // Exam Attendance endpoints
+  EXAM_ATTENDANCE_SEARCH: '/admin/exam/attendance',
+  EXAM_ATTENDANCE_ADD: '/admin/exam/attendance/add',
 };
 
 // HTTP Methods

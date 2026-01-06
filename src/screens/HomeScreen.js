@@ -82,7 +82,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff,onNavigateStaffAttendance,onNavigateExamSchedule,onNavigateExamType,onNavigateExamSetup,onNavigateMarkGrade }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff,onNavigateStaffAttendance,onNavigateExamSchedule,onNavigateExamType,onNavigateExamSetup,onNavigateMarkGrade,onNavigateExamAttendance }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [dashboardCounts, setDashboardCounts] = useState(null);
   const [loadingCounts, setLoadingCounts] = useState(true);
@@ -302,6 +302,12 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateMarkGrade();
       }
       console.log('Navigating to Mark Grade');
+    } else if (item.id === '7.5') {
+      // Exam Attendance
+      if (onNavigateExamAttendance) {
+        onNavigateExamAttendance();
+      }
+      console.log('Navigating to Exam Attendance');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');

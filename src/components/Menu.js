@@ -42,6 +42,7 @@ const MENU_PERMISSION_MAP = {
   7.2: "003.001", // Exam Type (view/list)
   7.3: "003.006", // Exam Setup (view/list)
   7.4: "003.021", // Mark Grade (view/list)
+  7.5: "003.015", // Exam Attendance (view/list)
 };
 
 export default function Menu({
@@ -95,6 +96,11 @@ export default function Menu({
           id: "7.4",
           title: "Mark Grade",
           icon: "📊",
+        },
+        {
+          id: "7.5",
+          title: "Exam Attendance",
+          icon: "✓",
         },
       ],
     },

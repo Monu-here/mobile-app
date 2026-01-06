@@ -530,6 +530,26 @@ class ApiService {
   }
 
   /**
+   * Get sections by grade ID
+   * @param {number} gradeId
+   */
+  async getSectionsByGrade(gradeId) {
+    try {
+      // eslint-disable-next-line no-console
+      console.log('[apiService] getSectionsByGrade called with gradeId:', gradeId);
+      const response = await this.post(ENDPOINTS.SECTION_GET, { grade_id: gradeId });
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[apiService] getSectionsByGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Add a new section
    * @param {Object} payload { name, grade_id, status }
    */
@@ -3105,6 +3125,62 @@ class ApiService {
       return { raw, data, message };
     } catch (error) {
       console.error('[apiService] deleteMarkGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search exam attendance (get students list for a grade/section/date)
+   * @param {Object} filters { grade_id, section_id, attendance_date }
+   */
+  async searchExamAttendance(filters = {}) {
+    try {
+      console.log('[apiService] searchExamAttendance called', filters);
+      const response = await this.post(ENDPOINTS.EXAM_ATTENDANCE_SEARCH, filters);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to search attendance';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] searchExamAttendance error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add/Store exam attendance records
+   * @param {Object} payload { grade_id, section_id, subject_id, exam_type_id, attendance_date, students }
+   */
+  async addExamAttendance(payload) {
+    try {
+      console.log('[apiService] addExamAttendance called', payload);
+      const response = await this.post(ENDPOINTS.EXAM_ATTENDANCE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to save attendance';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Exam attendance saved successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] addExamAttendance error:', error);
       throw error;
     }
   }
