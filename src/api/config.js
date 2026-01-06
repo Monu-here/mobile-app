@@ -1,6 +1,6 @@
 // API Configuration
 // Updated to the user-provided API
-export const API_BASE_URL = 'http://192.168.1.110:8080/api';
+export const API_BASE_URL = 'http://192.168.1.110:8000/api';
 
 export const ENDPOINTS = {
    LOGIN: '/login',
@@ -144,6 +144,11 @@ export const ENDPOINTS = {
   EXAM_SETUP_ADD: '/admin/exam/setup/add',
   EXAM_SETUP_UPDATE: '/admin/exam/setup/update/{id}',
   EXAM_SETUP_DELETE: '/admin/exam/setup/delete/{id}',
+  // Mark Grade endpoints
+  MARK_GRADE_GET: '/admin/exam/mark-grade',
+  MARK_GRADE_ADD: '/admin/exam/mark-grade/add',
+  MARK_GRADE_UPDATE: '/admin/exam/mark-grade/update/{id}',
+  MARK_GRADE_DELETE: '/admin/exam/mark-grade/delete/{id}',
 };
 
 // HTTP Methods

@@ -2994,6 +2994,120 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get mark grades list
+   */
+  async getMarkGrades() {
+    try {
+      console.log('[apiService] getMarkGrades called');
+      const response = await this.get(ENDPOINTS.MARK_GRADE_GET);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to fetch mark grades';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getMarkGrades error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add a new mark grade
+   * @param {Object} payload { name, gpa, percent_from, percent_upto, description }
+   */
+  async addMarkGrade(payload) {
+    try {
+      console.log('[apiService] addMarkGrade called', payload);
+      const response = await this.post(ENDPOINTS.MARK_GRADE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to add mark grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Mark grade added successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] addMarkGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a mark grade
+   * @param {number} id Mark grade ID
+   * @param {Object} payload { name, gpa, percent_from, percent_upto, description }
+   */
+  async updateMarkGrade(id, payload) {
+    try {
+      console.log('[apiService] updateMarkGrade called', id, payload);
+      const endpoint = ENDPOINTS.MARK_GRADE_UPDATE.replace('{id}', id);
+      const response = await this.post(endpoint, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to update mark grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Mark grade updated successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] updateMarkGrade error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a mark grade
+   * @param {number} id Mark grade ID
+   */
+  async deleteMarkGrade(id) {
+    try {
+      console.log('[apiService] deleteMarkGrade called', id);
+      const endpoint = ENDPOINTS.MARK_GRADE_DELETE.replace('{id}', id);
+      const response = await this.get(endpoint);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to delete mark grade';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Mark grade deleted successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] deleteMarkGrade error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();

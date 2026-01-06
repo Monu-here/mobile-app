@@ -352,6 +352,18 @@ export default function ExamSetupScreen({ onBack }) {
     return subject?.name || "Unknown";
   };
 
+  const groupExamSetupsByTitle = (setups) => {
+    const grouped = {};
+    setups.forEach((setup) => {
+      const title = setup.exam_title || "Untitled";
+      if (!grouped[title]) {
+        grouped[title] = [];
+      }
+      grouped[title].push(setup);
+    });
+    return grouped;
+  };
+
   const renderExamSetupItem = ({ item }) => {
     console.log(
       "[ExamSetupScreen] Rendering item:",
@@ -368,16 +380,14 @@ export default function ExamSetupScreen({ onBack }) {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.cardTitleSection}>
-            <Text style={styles.cardLabel}>Grade</Text>
-            <Text style={styles.cardTitle}>{getGradeName(item.grade_id)}</Text>
+            <Text style={styles.cardLabel}>
+              Grade:{" "}
+              <Text style={styles.cardTitle}>
+                {getGradeName(item.grade_id)}
+              </Text>
+            </Text>
           </View>
           <View style={styles.cardActions}>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => handleEditSetup(item)}
-            >
-              <Text style={styles.editButtonText}>✏️ Edit</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => handleDeleteSetup(item)}
@@ -394,17 +404,7 @@ export default function ExamSetupScreen({ onBack }) {
               {getSubjectName(item.subject_id)}
             </Text>
           </View>
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>📝 Exam Title:</Text>
-            <Text
-              style={[
-                styles.detailValue,
-                exam_title === "N/A" && { color: "#999" },
-              ]}
-            >
-              {exam_title}
-            </Text>
-          </View>
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>📝 Exam Type:</Text>
             <Text style={styles.detailValue}>
@@ -655,14 +655,22 @@ export default function ExamSetupScreen({ onBack }) {
         </View>
       )}
 
-      {/* Exam Setups List */}
+      {/* Exam Setups List Grouped by Title */}
       {!loading && examSetups.length > 0 && (
-        <FlatList
-          data={examSetups}
-          renderItem={renderExamSetupItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContent}
-        />
+        <ScrollView contentContainerStyle={styles.listContent}>
+          {Object.entries(groupExamSetupsByTitle(examSetups)).map(
+            ([title, setups]) => (
+              <View key={title} style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>{title || "Untitled"}</Text>
+                {setups.map((setup) => (
+                  <View key={setup.id}>
+                    {renderExamSetupItem({ item: setup })}
+                  </View>
+                ))}
+              </View>
+            )
+          )}
+        </ScrollView>
       )}
 
       {/* Empty State */}
@@ -1016,6 +1024,19 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
+  },
+  sectionContainer: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#6C63FF",
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 8,
+    marginBottom: 12,
   },
   card: {
     backgroundColor: "#fff",
