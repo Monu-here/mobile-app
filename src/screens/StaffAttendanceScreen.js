@@ -309,7 +309,16 @@ export default function StaffAttendanceScreen({ onBack }) {
 
       const data = response?.data || {};
       const staffs = data?.staffs || [];
-      const attendances = data?.staffAttendances || [];
+      
+      // Handle paginated or non-paginated attendance responses
+      let attendances = [];
+      if (data?.staffAttendances?.data) {
+        // Paginated response from Laravel ->paginate()
+        attendances = data.staffAttendances.data;
+      } else if (Array.isArray(data?.staffAttendances)) {
+        // Non-paginated array response
+        attendances = data.staffAttendances;
+      }
 
       setStaffList(staffs);
 
