@@ -45,8 +45,7 @@ const MENU_PERMISSION_MAP = {
   7.5: "003.015", // Exam Attendance (view/list)
   7.6: "003.026", // Mark Store (view/list)
   7.7: "003.027", // Result List (view/list)
-  7.8: "003.028", // Mark Sheet (view/list)
-  7.9: "003.029", // All Mark Sheet (view/list)
+ 
 };
 
 export default function Menu({
