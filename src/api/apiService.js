@@ -3184,6 +3184,101 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get exam data for mark store (exams and permitted grades)
+   */
+  async getExamDataForMarkStore() {
+    try {
+      console.log('[apiService] getExamDataForMarkStore called');
+      console.log('apiService getExamDataForMarkStore called',ENDPOINTS.MARK_STORE_EXAM_DATA);
+      const response = await this.get(ENDPOINTS.MARK_STORE_EXAM_DATA);
+      
+      const raw = response;
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getExamDataForMarkStore error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get students for exam to enter marks
+   * @param {Object} payload { exam_type_id, grade_id, section_id, subject_id }
+   */
+  async getStudentsForExam(payload) {
+    try {
+      console.log('[apiService] getStudentsForExam called', payload);
+      console.log('apiService payload:', payload);
+      const response = await this.post(ENDPOINTS.MARK_STORE_GET_STUDENTS, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to get students';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      // Return the nested data object containing {data, marks_distribution, existingMark}
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getStudentsForExam error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get subjects assigned to teacher
+   */
+  async getSubjectsForTeacher() {
+    try {
+      console.log('[apiService] getSubjectsForTeacher called');
+      const response = await this.get(ENDPOINTS.MARK_STORE_GET_SUBJECT_FOR_TEACHER);
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getSubjectsForTeacher error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Store exam marks for students
+   * @param {Object} payload { exam_type_id, grade_id, section_id, subject_id, students }
+   */
+  async storeExamMarks(payload) {
+    try {
+      console.log('[apiService] storeExamMarks called', payload);
+      const response = await this.post(ENDPOINTS.MARK_STORE_ADD, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to store marks';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = (response && (response.data?.data || response.data)) || response || null;
+      const message = response?.message || 'Marks saved successfully';
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] storeExamMarks error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();

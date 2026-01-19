@@ -35,6 +35,7 @@ import ExamTypeScreen from './src/screens/ExamTypeScreen';
 import ExamSetupScreen from './src/screens/ExamSetupScreen';
 import MarkGradeScreen from './src/screens/MarkGradeScreen';
 import ExamAttendanceScreen from './src/screens/ExamAttendanceScreen';
+import MarkStoreScreen from './src/screens/MarkStoreScreen';
 import Toast from './src/components/Toast';
 import { isOnboardingCompleted, getToken, setOnboardingCompleted } from './src/utils/storage';
 import apiService from './src/api/apiService';
@@ -228,6 +229,10 @@ export default function App() {
     setAppState('examAttendance');
   }
 
+  const handleNavigateMarkStore = () => {
+    setAppState('markStore');
+  }
+
   const handleNavigateSettingsList = () => {
     setAppState('settingsList');
   };
@@ -305,6 +310,7 @@ export default function App() {
           onNavigateExamSetup={handleNavigateExamSetup}
           onNavigateMarkGrade={handleNavigateMarkGrade}
           onNavigateExamAttendance={handleNavigateExamAttendance}
+          onNavigateMarkStore={handleNavigateMarkStore}
         />
       )}
       {appState === 'profile' && <ProfileScreen user={user} onBack={handleProfileBack} />}
@@ -338,6 +344,7 @@ export default function App() {
       {appState === 'examSetup' && <ExamSetupScreen onBack={() => setAppState('home')} />}
       {appState === 'markGrade' && <MarkGradeScreen onBack={() => setAppState('home')} />}
       {appState === 'examAttendance' && <ExamAttendanceScreen onBack={() => setAppState('home')} />}
+      {appState === 'markStore' && <MarkStoreScreen onBack={() => setAppState('home')} />}
       {/* Global Toast container */}
       <Toast />
     </>

@@ -1,6 +1,6 @@
 // API Configuration
 // Updated to the user-provided API
-export const API_BASE_URL = 'http://192.168.1.110:8000/api';
+export const API_BASE_URL = 'http://192.168.1.110:8001/api';
 
 export const ENDPOINTS = {
    LOGIN: '/login',
@@ -152,6 +152,12 @@ export const ENDPOINTS = {
   // Exam Attendance endpoints
   EXAM_ATTENDANCE_SEARCH: '/admin/exam/attendance',
   EXAM_ATTENDANCE_ADD: '/admin/exam/attendance/add',
+  // Mark Store endpoints
+  MARK_STORE_EXAM_DATA: '/admin/exam/mark-store/exam-data',
+  MARK_STORE_GET_STUDENTS: '/admin/exam/mark-store',
+  MARK_STORE_GET_SUBJECT_FOR_TEACHER: '/admin/exam/mark-store/get-subject-for-teacher',
+  MARK_STORE_ADD: '/admin/exam/mark-store/add',
+
 };
 
 // HTTP Methods
