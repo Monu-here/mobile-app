@@ -44,6 +44,9 @@ const MENU_PERMISSION_MAP = {
   7.4: "003.021", // Mark Grade (view/list)
   7.5: "003.015", // Exam Attendance (view/list)
   7.6: "003.026", // Mark Store (view/list)
+  7.7: "003.027", // Result List (view/list)
+  7.8: "003.028", // Mark Sheet (view/list)
+  7.9: "003.029", // All Mark Sheet (view/list)
 };
 
 export default function Menu({
@@ -108,6 +111,12 @@ export default function Menu({
           title: "Mark Store",
           icon: "📝",
         },
+        {
+          id: "7.7",
+          title: "Result List",
+          icon: "📊",
+        },
+        
       ],
     },
     {

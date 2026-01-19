@@ -3279,6 +3279,108 @@ class ApiService {
       throw error;
     }
   }
+
+  /**
+   * Get exam types for result viewing
+   */
+  async getExamTypesForResult() {
+    try {
+      console.log('[apiService] getExamTypesForResult called');
+      const response = await this.get(ENDPOINTS.RESULT_EXAM_TYPES);
+      
+      const raw = response;
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getExamTypesForResult error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get result list for grade/section/exam
+   * @param {Object} payload { exam_type_id, grade_id, section_id }
+   */
+  async getResultList(payload) {
+    try {
+      console.log('[apiService] getResultList called', payload);
+      const response = await this.post(ENDPOINTS.RESULT_LIST, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to get result list';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getResultList error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get mark sheet for a student
+   * @param {Object} payload { student_id, exam_type_id, grade_id }
+   */
+  async getMarkSheet(payload) {
+    try {
+      console.log('[apiService] getMarkSheet called', payload);
+      const response = await this.post(ENDPOINTS.RESULT_MARK_SHEET, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to get mark sheet';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getMarkSheet error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all mark sheets for a section
+   * @param {Object} payload { exam_type_id, grade_id, section_id }
+   */
+  async getAllMarkSheets(payload) {
+    try {
+      console.log('[apiService] getAllMarkSheets called', payload);
+      const response = await this.post(ENDPOINTS.RESULT_ALL_MARK_SHEET, payload);
+      
+      if (response?.status === false) {
+        const errorMsg = response?.msg ? Object.values(response.msg).flat().join(', ') : 'Failed to get mark sheets';
+        throw {
+          status: 400,
+          message: errorMsg,
+          data: response,
+        };
+      }
+      
+      const raw = response;
+      const data = response?.data || null;
+      const message = response?.message || null;
+      return { raw, data, message };
+    } catch (error) {
+      console.error('[apiService] getAllMarkSheets error:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();

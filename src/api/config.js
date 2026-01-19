@@ -157,6 +157,11 @@ export const ENDPOINTS = {
   MARK_STORE_GET_STUDENTS: '/admin/exam/mark-store',
   MARK_STORE_GET_SUBJECT_FOR_TEACHER: '/admin/exam/mark-store/get-subject-for-teacher',
   MARK_STORE_ADD: '/admin/exam/mark-store/add',
+  // Result endpoints
+  RESULT_EXAM_TYPES: '/admin/result/exam-type',
+  RESULT_LIST: '/admin/result/result-list',
+  RESULT_MARK_SHEET: '/admin/result/mark-sheet',
+  RESULT_ALL_MARK_SHEET: '/admin/result/all-mark-sheet',
 
 };
 

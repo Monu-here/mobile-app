@@ -82,7 +82,7 @@ function renderRoleSpecific(user) {
   );
 }
 
-export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff,onNavigateStaffAttendance,onNavigateExamSchedule,onNavigateExamType,onNavigateExamSetup,onNavigateMarkGrade,onNavigateExamAttendance,onNavigateMarkStore }) {
+export default function HomeScreen({ user, onLogout, onNavigateProfile, onNavigateSchoolSettings, onNavigateAcademicYear ,onNavigateBranch,onNavigatePickupPoint,onNavigateGrade,onNavigateSection,onNavigateRfid,onNavigateVehicle,onNavigateEvent,onNavigateAcademicCalendar,onNavigateCaste,onNavigateReligion,onNavigateRoute,onNavigateScholarship,onNavigateSubject,onNavigateNotice,onNavigateSchedule,onNavigateStudentCategory,onNavigatePost,onNavigateRoutePickupPoint,onNavigateLeaveType,onNavigatePermission,onNavigateStaff,onNavigateStaffAttendance,onNavigateExamSchedule,onNavigateExamType,onNavigateExamSetup,onNavigateMarkGrade,onNavigateExamAttendance,onNavigateMarkStore,onNavigateResultList,onNavigateMarkSheet,onNavigateAllMarkSheet }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [dashboardCounts, setDashboardCounts] = useState(null);
   const [loadingCounts, setLoadingCounts] = useState(true);
@@ -314,6 +314,24 @@ export default function HomeScreen({ user, onLogout, onNavigateProfile, onNaviga
         onNavigateMarkStore();
       }
       console.log('Navigating to Mark Store');
+    } else if (item.id === '7.7') {
+      // Result List
+      if (onNavigateResultList) {
+        onNavigateResultList();
+      }
+      console.log('Navigating to Result List');
+    } else if (item.id === '7.8') {
+      // Mark Sheet
+      if (onNavigateMarkSheet) {
+        onNavigateMarkSheet();
+      }
+      console.log('Navigating to Mark Sheet');
+    } else if (item.id === '7.9') {
+      // All Mark Sheet
+      if (onNavigateAllMarkSheet) {
+        onNavigateAllMarkSheet();
+      }
+      console.log('Navigating to All Mark Sheet');
     } else if (item.id === '6.4') {
       // Privacy & Security
       console.log('Navigating to Privacy & Security');
